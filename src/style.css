@@ -1,0 +1,32 @@
+@import "tailwindcss";
+
+head{
+    background-color: #28282B; 
+}
+
+body{
+    background-color: #28282B;
+}
+
+@font-face {
+  font-family: MN20;
+  src: url("/src/Modern_No_20_Font.ttf");
+}
+
+.titlebar {
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  app-region: drag;
+}
+
+.titleWrapper{
+   display: flex;
+}
+
+.titleText{
+    color: #FAF9F6;
+    margin: auto;
+    font-family: MN20;
+}

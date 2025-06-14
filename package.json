@@ -18,6 +18,9 @@
   },
   "homepage": "https://github.com/Jazzsw/TDS-Matrixify-Parser#readme",
   "devDependencies": {
-    "electron": "^36.4.0"
+    "autoprefixer": "^10.4.21",
+    "electron": "^36.4.0",
+    "postcss": "^8.5.5",
+    "tailwindcss": "^4.1.10"
   }
 }
