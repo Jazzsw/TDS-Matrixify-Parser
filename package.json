@@ -1,0 +1,23 @@
+{
+  "name": "tds-matrixify-parser",
+  "version": "1.0.0",
+  "description": "Parser for matrixify",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jazzsw/TDS-Matrixify-Parser.git"
+  },
+  "author": "Jazz Stocker-Witterick",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jazzsw/TDS-Matrixify-Parser/issues"
+  },
+  "homepage": "https://github.com/Jazzsw/TDS-Matrixify-Parser#readme",
+  "devDependencies": {
+    "electron": "^36.4.0"
+  }
+}
