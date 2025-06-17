@@ -7,19 +7,50 @@
         <title></title>
     </head>
 
-    <body>
-        <div class="titlebar"></div>
-        <div class="titleWrapper">
-            <h1 class="titleText">THE DOOR STORE</h1><br>
-        </div>
-        <div class="titleWrapper">
-            <p class="titleText">Matrixify Parser</h1><br>
+    <body style = "display: flex;">
+
+        <div id="sidebar">
+
+            <div class="titlebar"></div>
+            <div class="titleWrapper">
+                <h1 class="titleText">THE DOOR STORE</h1><br>
+            </div>
+            <div class="titleWrapper">
+                <p class="titleText">Matrixify Parser</h1><br>
+            </div>
+
+                <h3 class="subtitle">Add Bulk Tags</h3>
+                <div class = "sidebarBox">
+                    <div id ="tagsWrapper" style="flex-grow: 3;"></div>
+                    <input class="textInput" type="text" placeholder="Tag">
+                    <button class="sidebarBtn">Add Bulk Tag</button>
+                </div>
+
+                <h3 class="subtitle">Add Item Overrides</h3>
+                <div class = "sidebarBox">
+                    <div id="overridesWrapper" style="flex-grow: 3; flex-direction: column; overflow-y: scroll;">
+                    </div>
+
+                    <div>
+                        <div style="display: flex;">
+                        <input id="overrideCode" class="textInput" type="text" placeholder="Item Code" style="width:50%">
+                        <input id="overridePrice" class="textInput" type="text" placeholder="Price" style="width:50%">
+                        </div>
+
+                        <button id="overrideBtn" class="sidebarBtn">Add Item Override</button>
+                    </div>
+
+                </div>
         </div>
 
 
-        <div style="display: flex; justify-content: space-between;">
-            <div>
-                <h3 class="bodyText">Upload pricelist</h3>
+
+
+        <div id="content" style="margin: 10px; flex-grow: 3;">
+
+        
+            <div style="width: 100%;">
+                <h3 class="bodyText">Upload Files</h3>
 
                 <label class="custom-file-upload">Click to Upload File
                     <input id="fileInput" type="file">
@@ -27,41 +58,44 @@
             </div>
 
             <div>
-                <h3 class = "bodyText">Add Item Overrides</h3>
-                <div style=" display: flex; flex-direction: column; border: 1px solid #ccc; width: 40vw; padding: 6px 12px; margin-top: -3px; height: 20vw; border-radius: 10px;">
-                    <div id="overridesWrapper" style="flex-grow: 3; flex-direction: column; overflow-y: scroll;">
+                
+
+                <div id ="uploadWrapper" style="margin-top: 10px;">
+                    <h3 class="bodyText" style="margin-left: 10px;">Your Files</h3>
+                    
+                    <div style="height:30px; display: flex; justify-content: space-between; border-bottom: 0.5px solid #ccc; text-align: flex-start;">
+                        <p class="filesHeader">File Name</p>
+                        <p class="filesHeader">File Type</p>
+                        <p class="filesHeader">Actions</p>
                     </div>
 
-                    <div>
-                        <div style="display: flex;">
-                        <input id="overrideCode" class="textInput" type="text" placeholder="Item Code" style="width:50%">
-                        <input id="overridePrice" class="textInput" type="text" placeholder="Override Price" style="width:50%">
-                        </div>
-
-                        <button id="overrideBtn" style=" border-radius: 10px;border: 1px solid #ccc;padding: 10px;margin: 1%;">Add Item Override</button>
+                    <div style="display: flex; height: 30px;">
+                    <h3 class="filesHeader" style="margin: auto;">Files you upload will appear here</h3>
                     </div>
 
                 </div>
+
             </div>
-        </div>
 
-        <div style="display:flex;">
-        <h4 class="bodyText">Update Command Mode</h4>
-        <select style="margin: 10px; width:100px;">
-            <option value="UPDATE">Update</option>
-            <option value="NEW">New</option>
-            <option value="MERGE">Merge</option>
-            <option value="DELETE">Delete</option>
-        </select>
-        </div>
+            
+            
+    
 
-        <div style="border: 1px solid #ccc; width: 40vw; padding: 6px 12px; margin-top: -3px; height: 20vw; border-radius: 10px;">
-            <input class="textInput" type="text">
-            <button>Add Bulk Tag</button>
-        </div>
-
+        <!-- <div style="display:flex;">
+            <h4 class="bodyText">Update Command Mode</h4>
+            <select style="margin: 10px; width:100px;">
+                <option value="UPDATE">Update</option>
+                <option value="NEW">New</option>
+                <option value="MERGE">Merge</option>
+                <option value="DELETE">Delete</option>
+            </select>
+        </div> -->
 
         <p style="color: aliceblue;" id="consoleText">console empty</p>
+
+        
+
+        </div>
        
     
         <script src="index.js"></script>

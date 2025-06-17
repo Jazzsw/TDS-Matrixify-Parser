@@ -7,6 +7,7 @@ head{
 
 body{
     background-color: #28282B;
+    margin: 0%;
 }
 
 @font-face {
@@ -22,10 +23,10 @@ input[type="file"] {
     color: #ccc;
     border: 1px dashed #ccc;
     border-radius: 10px;
-    display: inline-block;
+    display: flex;
     padding: 6px 12px;
     margin-top: -3px;
-    width: 40vw;
+    width: 90%;
     height: 20vw;
     cursor: pointer;
 }
@@ -45,6 +46,7 @@ input[type="file"] {
 .titleText{
     color: #FAF9F6;
     margin: auto;
+    font-size: larger;
     font-family: MN20;
 }
 .bodyText{
@@ -69,4 +71,52 @@ input[type="file"] {
     padding: 10px;
     margin: 1%;
     color: #ccc;
+}
+
+#sidebar{
+    background-color: #1E1E1E;
+    width: 25vw;
+    height: 100vh;
+    margin: 0px;
+    padding: 20px;
+}
+
+.sidebarBox{
+    display: flex; 
+    background-color: #28282B;
+    flex-direction: column;
+    border: 1px solid #ccc;
+    padding: 6px 12px;
+    height: 20vw;
+    border-radius: 10px;
+
+}
+.subtitle{
+    margin-top: 30px;
+    color: #ccc;
+    line-height: 5px;
+    
+
+}
+.sidebarBtn{
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 1%;
+    width:100%
+}
+
+#uploadWrapper{
+    width: 95%;
+    border-radius: 10px;
+    background-color: #1E1E1E;
+    border: 0.5px solid #ccc;
+    margin: 1px;
+}
+
+.filesHeader{
+    color: #ccc;
+    line-height: 10px;
+    padding-left: 10px;
+    padding-right: 10px;
 }
