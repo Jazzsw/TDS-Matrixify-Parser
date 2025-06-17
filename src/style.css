@@ -1,2 +1,72 @@
 @import "tailwindcss";
-@import url('htt
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Sans:ital,wght@0,400..700;1,400..700&display=swap');
+
+head{
+    background-color: #28282B; 
+}
+
+body{
+    background-color: #28282B;
+}
+
+@font-face {
+  font-family: MN20;
+  src: url("/src/Modern_No_20_Font.ttf");
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.custom-file-upload {
+    color: #ccc;
+    border: 1px dashed #ccc;
+    border-radius: 10px;
+    display: inline-block;
+    padding: 6px 12px;
+    margin-top: -3px;
+    width: 40vw;
+    height: 20vw;
+    cursor: pointer;
+}
+
+.titlebar {
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  app-region: drag;
+}
+
+.titleWrapper{
+   display: flex;
+}
+
+.titleText{
+    color: #FAF9F6;
+    margin: auto;
+    font-family: MN20;
+}
+.bodyText{
+    color: #FAF9F6;
+    font-family: "Instrument Sans", sans-serif;
+}
+
+#fileInput{
+    color: white;
+    background: none;
+}
+
+.row1{
+    display: flex;
+    justify-content: space-between;
+}
+
+.textInput{
+    background-color: #28282B;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 1%;
+    color: #ccc;
+}

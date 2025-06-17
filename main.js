@@ -1,5 +1,6 @@
 const { app, BrowserWindow } = require('electron/main')
 
+
 //Simple window creation with browserWindow loading layout from index 
   const createWindow = () => {
   const win = new BrowserWindow({//define window size

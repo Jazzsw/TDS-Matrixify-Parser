@@ -1,11 +1,15 @@
+// Item Override Section
+document.getElementById("overrideBtn").addEventListener('click', function(){
+  let code = document.getElementById("overrideCode").value;
+  let price = document.getElementById("overridePrice").value;
 
-//document.getElementById("fileInput").style.color = "white"
+  var newText = document.createTextNode(code + "- $" + price);
+  var newElement = document.createElement("div");
+  newElement.style.color = "#ccc"
 
-const inputElement = document.getElementById("fileInput");
-inputElement.addEventListener("change", handleFiles, false);
-function handleFiles() {
-  const fileList = this.files; /* now you can work with the file list */
+  newElement.appendChild(newText)
+  document.getElementById("overridesWrapper").appendChild(newElement);
 
-alert(fileList.length)
-
-}
+  document.getElementById("overrideCode").value = ""
+  document.getElementById("overridePrice").value = ""
+})  

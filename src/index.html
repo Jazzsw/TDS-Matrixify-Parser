@@ -17,13 +17,40 @@
         </div>
 
 
-        <h3 class="bodyText">Upload pricelist</h3>
+        <div style="display: flex; justify-content: space-between;">
+            <div>
+                <h3 class="bodyText">Upload pricelist</h3>
 
-        <label class="custom-file-upload">Click to Upload File
-            <input id="fileInput" type="file" />
-        </label>
+                <label class="custom-file-upload">Click to Upload File
+                    <input id="fileInput" type="file">
+                </label>
+            </div>
+
+            <div>
+                <h3 class = "bodyText">Add Item Overrides</h3>
+                <div style=" display: flex; flex-direction: column; border: 1px solid #ccc; width: 40vw; padding: 6px 12px; margin-top: -3px; height: 20vw; border-radius: 10px;">
+                    <div id="overridesWrapper" style="flex-grow: 3; flex-direction: column; overflow-y: scroll;">
+                    </div>
+
+                    <div>
+                        <div style="display: flex;">
+                        <input id="overrideCode" class="textInput" type="text" placeholder="Item Code" style="width:50%">
+                        <input id="overridePrice" class="textInput" type="text" placeholder="Override Price" style="width:50%">
+                        </div>
+
+                        <button id="overrideBtn" style=" border-radius: 10px;border: 1px solid #ccc;padding: 10px;margin: 1%;">Add Item Override</button>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <p style="color: aliceblue;" id="consoleText">console empty</p>
        
        <script src="index.js"></script>
+       <script type="module" src = "excelJS.js"></script>
+
+
        
         <!-- <script>console.log("hw")</script> -->
     </body>
