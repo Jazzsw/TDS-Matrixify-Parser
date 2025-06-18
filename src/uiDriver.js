@@ -11,7 +11,7 @@ overrideNode.addEventListener("keyup", function(event) {
         let emptyText = document.getElementById("overrideInnerText");
 
         if(code != "" && price != ""){
-            var newText = document.createTextNode(code + "  -> $" + price);
+            var newText = document.createTextNode(code + "____$" + price);
             var newElement = document.createElement("div");
             newElement.className = "overrideItem"
 
@@ -50,7 +50,7 @@ document.getElementById("overrideBtn").addEventListener('click', function(){
     let emptyText = document.getElementById("overrideInnerText");
 
     if(code != "" && price != ""){
-    var newText = document.createTextNode(code + "  -> $" + price);
+    var newText = document.createTextNode(code + "_____$" + price);
     var newElement = document.createElement("div");
     newElement.className = "overrideItem"
 
