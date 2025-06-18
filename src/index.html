@@ -21,7 +21,9 @@
 
                 <h3 class="subtitle">Add Bulk Tags</h3>
                 <div class = "sidebarBox">
-                    <div id ="tagsWrapper" style="flex-grow: 3;"></div>
+                    <div id ="tagsWrapper" style="flex-grow: 3;">
+                        <p id="tagsInnerText"class="sidebarInnerText">Tags</p>
+                    </div>
                     <input id="addTag" class="textInput" type="text" placeholder="Tag">
                     <button id="tagBtn" class="sidebarBtn">Add Bulk Tag</button>
                 </div>
@@ -29,11 +31,12 @@
                 <h3 class="subtitle">Add Item Overrides</h3>
                 <div class = "sidebarBox">
                     <div id="overridesWrapper" style="flex-grow: 3; flex-direction: column; overflow-y: scroll;">
+                        <p id="overrideInnerText" class="sidebarInnerText">Item Overrides</p>
                     </div>
 
                     <div>
                         <div style="display: flex;">
-                        <input id="overrideCode" class="textInput" type="text" placeholder="Item Code" style="width:50%">
+                        <input id="overrideCode" class="textInput" type="text" placeholder="SKU" style="width:50%">
                         <input id="overridePrice" class="textInput" type="text" placeholder="Price" style="width:50%">
                         </div>
 
@@ -101,9 +104,7 @@
         <script src="index.js"></script>
         <script type="module" src = "excelJS.js"></script>
         <script type="module" src ="uiDriver.js"></script>
-           
-
-
+        
        
         <!-- <script>console.log("hw")</script> -->
     </body>

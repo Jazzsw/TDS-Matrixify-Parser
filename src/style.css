@@ -134,7 +134,14 @@ input[type="file"] {
 }
 .deleteOverride{
     color: red;
+    cursor: pointer;
 }
 .deleteTag{
     color: red;
+    cursor: pointer;
+}
+
+.sidebarInnerText{
+    color: grey;
+    line-height: 2%;
 }

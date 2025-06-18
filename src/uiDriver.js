@@ -1,9 +1,12 @@
 // Price Override
+let overridesCount = 0;
+
 const overrideNode = document.getElementById("overridePrice");
 overrideNode.addEventListener("keyup", function(event) {
     if (event.key === "Enter") {
         let code = document.getElementById("overrideCode").value;
         let price = document.getElementById("overridePrice").value;
+        let emptyText = document.getElementById("overrideInnerText");
 
         if(code != "" && price != ""){
             var newText = document.createTextNode(code + "  -> $" + price);
@@ -19,12 +22,20 @@ overrideNode.addEventListener("keyup", function(event) {
 
             deleteBtn.addEventListener('click', () => {
                 newElement.remove();
+                overridesCount--
+                if(overridesCount == 0){
+                    emptyText.style.display = "block"
+                }
+                
             });
 
             newElement.appendChild(deleteBtn)
 
             document.getElementById("overrideCode").value = ""
             document.getElementById("overridePrice").value = ""
+
+            emptyText.style.display = "none"
+            overridesCount++
   } 
         
     }
@@ -34,8 +45,9 @@ document.getElementById("overrideBtn").addEventListener('click', function(){
   
     let code = document.getElementById("overrideCode").value;
     let price = document.getElementById("overridePrice").value;
+    let emptyText = document.getElementById("overrideInnerText");
 
-  if(code != "" && price != ""){
+    if(code != "" && price != ""){
     var newText = document.createTextNode(code + "  -> $" + price);
     var newElement = document.createElement("div");
     newElement.className = "overrideItem"
@@ -49,12 +61,19 @@ document.getElementById("overrideBtn").addEventListener('click', function(){
 
     deleteBtn.addEventListener('click', () => {
       newElement.remove();
+      overridesCount--;
+      if(overridesCount == 0){
+            emptyText.style.display = "block"
+        }
     });
 
     newElement.appendChild(deleteBtn)
 
     document.getElementById("overrideCode").value = ""
     document.getElementById("overridePrice").value = ""
+    
+    emptyText.style.display = "none"
+    overridesCount++
   } 
 })
 
@@ -69,11 +88,14 @@ document.getElementById("overrideCode").addEventListener("keyup", function(event
 
 
 
+let tagsCount = 0;
+
 // Bulk Tags
 const tagNode = document.getElementById("addTag");
 tagNode.addEventListener("keyup", function(event) {
     if (event.key === "Enter") {
         let tag = document.getElementById("addTag").value;
+        let emptyText = document.getElementById("tagsInnerText");
 
         if(tag != ""){
             var newText = document.createTextNode(tag);
@@ -89,11 +111,18 @@ tagNode.addEventListener("keyup", function(event) {
 
             deleteBtn.addEventListener('click', () => {
                 newElement.remove();
+                tagsCount--
+                if(tagsCount == 0){
+                    emptyText.style.display = "block"
+                }
             });
 
             newElement.appendChild(deleteBtn)
 
             document.getElementById("addTag").value = ""
+
+            emptyText.style.display = "none"
+            tagsCount++
   } 
         
     }
@@ -102,6 +131,7 @@ tagNode.addEventListener("keyup", function(event) {
 document.getElementById("tagBtn").addEventListener('click', function(){
   
     let tag = document.getElementById("addTag").value;
+    let emptyText = document.getElementById("tagsInnerText");
 
         if(tag != ""){
             var newText = document.createTextNode(tag);
@@ -117,10 +147,17 @@ document.getElementById("tagBtn").addEventListener('click', function(){
 
             deleteBtn.addEventListener('click', () => {
                 newElement.remove();
+                tagsCount--;
+                if(tagsCount == 0){
+                    emptyText.style.display = "block"
+                }
             });
 
             newElement.appendChild(deleteBtn)
 
-            document.getElementById("addTag").value = ""
+            document.getElementById("addTag").value = "";
+
+            emptyText.style.display = "none"
+            tagsCount++;
   } 
 })
