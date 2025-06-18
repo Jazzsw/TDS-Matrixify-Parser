@@ -11,6 +11,7 @@ const { app, BrowserWindow } = require('electron/main')
   })
 
   win.loadFile('src/index.html')
+  win.setMinimumSize(800, 600)
 }
 
 //MacOS window managment  
