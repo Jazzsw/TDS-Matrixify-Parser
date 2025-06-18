@@ -203,3 +203,16 @@ input[type="file"] {
     background-color: #1E1E1E;
     border-radius: 10px;
 }
+
+#createFile{
+    background-color: #FAF9F6;
+    border-radius: 10px;
+    position: absolute;
+    bottom: 4vh;
+    right: 2vw;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 1%;
+    width: 25vw;
+}
