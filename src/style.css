@@ -165,3 +165,12 @@ input[type="file"] {
     margin-bottom: 2vh;
 }
 
+.fileBar{
+    display: flex;
+    color: #ccc;
+    border-bottom: 0.5px solid #ccc;
+    justify-content: space-between;
+    margin: 1vw;
+    margin-bottom: 1vh;
+}
+

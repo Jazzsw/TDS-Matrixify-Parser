@@ -50,7 +50,7 @@
             <div style="width: 100%;">
                 <h3 class="bodyText">Upload Files</h3>
 
-                <label class="custom-file-upload">
+                <label id="dropBox" class="custom-file-upload">
                 
                     <div id="uploadDiv">
                         <div id="uploadTextWrapper">
@@ -71,14 +71,14 @@
                 <div id ="uploadWrapper" style="margin-top: 10px;">
                     <h3 class="bodyText" style="margin-left: 10px; margin-bottom: 0px;">Your Files</h3>
                     
-                    <div style="height:30px; display: flex; justify-content: space-between; border-bottom: 0.5px solid #ccc; text-align: flex-start; margin-top: 0px; margin-bottom: 3px;">
+                    <div style="height:30px; display: flex; justify-content: space-between; border-bottom: 0.5px solid #ccc; text-align: flex-start; margin: 1vw; margin-top: 0px; margin-bottom: 3px;">
                         <p class="filesHeader">File Name</p>
                         <p class="filesHeader">File Type</p>
                         <p class="filesHeader">Actions</p>
                     </div>
 
-                    <div style="display: flex;">
-                    <h3 class="filesHeader" style="margin: auto; margin-top: 3vh; margin-bottom: 3vh; font-size: medium;">Files you upload will appear here</h3>
+                    <div id="filesWrapper" style="display: flex; flex-direction: column;">
+                    <h3 id="filesEmptyText" class="filesHeader" style="margin: auto; margin-top: 3vh; margin-bottom: 3vh; font-size: medium;">Files you upload will appear here</h3>
                     </div>
 
                 </div>
@@ -96,7 +96,7 @@
             </select>
         </div> -->
 
-        <!-- <p style="color: aliceblue;" id="consoleText">console empty</p> -->
+        <p style="color: aliceblue;" id="consoleText">console empty</p>
 
         
 
