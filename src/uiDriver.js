@@ -14,7 +14,7 @@ overrideNode.addEventListener("keyup", function(event) {
             newElement.className = "overrideItem"
 
             newElement.appendChild(newText)
-            document.getElementById("overridesWrapper").appendChild(newElement);
+            document.getElementById("overridesWrapper").prepend(newElement);
 
             const deleteBtn = document.createElement('span');
             deleteBtn.className = 'deleteOverride';
@@ -53,7 +53,7 @@ document.getElementById("overrideBtn").addEventListener('click', function(){
     newElement.className = "overrideItem"
 
     newElement.appendChild(newText)
-    document.getElementById("overridesWrapper").appendChild(newElement);
+    document.getElementById("overridesWrapper").prepend(newElement);
 
     const deleteBtn = document.createElement('span');
     deleteBtn.className = 'deleteOverride';
@@ -103,7 +103,7 @@ tagNode.addEventListener("keyup", function(event) {
             newElement.className = "tagItem"
 
             newElement.appendChild(newText)
-            document.getElementById("tagsWrapper").appendChild(newElement);
+            document.getElementById("tagsWrapper").prepend(newElement);
 
             const deleteBtn = document.createElement('span');
             deleteBtn.className = 'deleteTag';
@@ -139,7 +139,7 @@ document.getElementById("tagBtn").addEventListener('click', function(){
             newElement.className = "tagItem"
 
             newElement.appendChild(newText)
-            document.getElementById("tagsWrapper").appendChild(newElement);
+            document.getElementById("tagsWrapper").prepend(newElement);
 
             const deleteBtn = document.createElement('span');
             deleteBtn.className = 'deleteTag';

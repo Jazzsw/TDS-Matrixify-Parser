@@ -101,7 +101,7 @@ input[type="file"] {
     border: 1px solid #ccc;
     padding: 10px;
     margin: 1%;
-    width:100%
+    width: auto;
 }
 
 #uploadWrapper{
@@ -124,11 +124,19 @@ input[type="file"] {
     color: #ccc;
     display: flex;
     justify-content: space-between;
+    background-color: #1E1E1E;
+    border-radius: 5px;
+    padding: 3px;
+    margin: 3px;
 }
 .tagItem{
     color: #ccc;
     display: flex;
     justify-content: space-between;
+    background-color: #1E1E1E;
+    border-radius: 5px;
+    padding: 3px;
+    margin: 3px;
 }
 .deleteOverride{
     color: red;
