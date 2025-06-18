@@ -37,6 +37,8 @@ input[type="file"] {
   justify-content: center;
   align-items: center;
   app-region: drag;
+  width: 100vw;
+  margin-top: 0px;
 }
 
 .titleWrapper{
@@ -93,7 +95,7 @@ input[type="file"] {
 }
 .subtitle{
     margin-top: 30px;
-    color: #ccc;
+    color:#FAF9F6;
     margin-bottom: 3px;
 }
 .sidebarBtn{
@@ -123,6 +125,7 @@ input[type="file"] {
 .overrideItem{
     color: #ccc;
     display: flex;
+    font-size: small;
     justify-content: space-between;
     background-color: #1E1E1E;
     border-radius: 5px;
@@ -135,7 +138,9 @@ input[type="file"] {
     justify-content: space-between;
     background-color: #1E1E1E;
     border-radius: 5px;
-    padding: 3px;
+    padding: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
     margin: 3px;
 }
 .deleteOverride{
@@ -171,6 +176,30 @@ input[type="file"] {
     border-bottom: 0.5px solid #ccc;
     justify-content: space-between;
     margin: 1vw;
+    padding-bottom: 1vh;
     margin-bottom: 1vh;
 }
+.filetypeDropdown{
+    background-color: #28282B;
+    color: #ccc;
+    border-radius: 10px;
+}
 
+#commandWrapper{
+    width: auto;
+    display: flex;
+    align-items: flex-end;
+    position: absolute;
+    bottom: 3vh;
+    
+}
+
+#commandSelect{
+    margin: auto;
+    margin-left: 10px;
+    width:150px;
+    height: 4vh;
+    color: #ccc;
+    background-color: #1E1E1E;
+    border-radius: 10px;
+}

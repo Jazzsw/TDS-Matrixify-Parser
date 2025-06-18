@@ -46,7 +46,7 @@
                 </div>
         </div>
 
-        <div id="content" style="margin: 10px; flex-grow: 3;">
+        <div id="content" style="margin: 10px; flex-grow: 1; display:flex; flex-direction: column;">
             <div style="width: 100%;">
                 <h3 class="bodyText">Upload Files</h3>
 
@@ -65,9 +65,7 @@
                 </label>
             </div>
 
-        <div>
-                
-
+            <div>
                 <div id ="uploadWrapper" style="margin-top: 10px;">
                     <h3 class="bodyText" style="margin-left: 10px; margin-bottom: 0px;">Your Files</h3>
                     
@@ -82,21 +80,20 @@
                     </div>
 
                 </div>
-
             </div>
 
             
-        <!-- <div style="display:flex;">
-            <h4 class="bodyText">Update Command Mode</h4>
-            <select style="margin: 10px; width:100px;">
+        <div id="commandWrapper">
+            <h4 class="bodyText">Command Mode</h4>
+            <select id="commandSelect">
                 <option value="UPDATE">Update</option>
                 <option value="NEW">New</option>
                 <option value="MERGE">Merge</option>
                 <option value="DELETE">Delete</option>
             </select>
-        </div> -->
+        </div>
 
-        <p style="color: aliceblue;" id="consoleText">console empty</p>
+        <!-- <p style="color: aliceblue;" id="consoleText">console empty</p> -->
 
         
 

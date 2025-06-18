@@ -179,23 +179,23 @@ dropZone.addEventListener('dragleave', () => {
     dropZone.classList.remove('hover');
 });
 
-const c = document.getElementById('consoleText');
-c.innerHTML = "Waiting for file...";
+//const c = document.getElementById('consoleText');
+//c.innerHTML = "Waiting for file...";
 
 
 dropZone.addEventListener('change', async (event) => {
     event.preventDefault();
     dropZone.classList.remove('hover');
-    c.innerHTML = "Reading file...";
+    //c.innerHTML = "Reading file...";
 
 
     const file = event.target.files[0];
     if (!file) {
-      c.innerHTML = "No file selected.";
+      //c.innerHTML = "No file selected.";
       return;
     }
 
-    c.innerHTML = (file.name)
+    //c.innerHTML = (file.name)
     addFile(file.name)
 
     const buffer = await file.arrayBuffer();
@@ -214,7 +214,16 @@ dropZone.addEventListener('change', async (event) => {
         newContainer.className = "fileBar"
 
         let newDropdown = document.createElement("select");
-        //add options
+        newDropdown.className = "filetypeDropdown"
+        
+        let options = ["B&M Singles", "B&M Interior Sets"]
+        for (let i=0; i<options.length; i++){
+            let newOption = document.createElement("option");
+            newOption.text = options[i]
+            newOption.appendChild(newText)
+            newDropdown.appendChild(newOption);
+        }
+         
 
         const deleteBtn = document.createElement('span');
         deleteBtn.className = 'deleteTag';
