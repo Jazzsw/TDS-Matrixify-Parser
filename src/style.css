@@ -19,14 +19,20 @@ input[type="file"] {
     display: none;
 }
 
+#content{
+    margin: 2vh; 
+    flex-grow: 1;
+    display:flex; 
+    flex-direction: column;
+}
+
 .custom-file-upload {
     color: #ccc;
-    border: 1px dashed #ccc;
+    border: 0.5px dashed #ccc;
     border-radius: 10px;
     display: flex;
-    padding: 6px 12px;
-    margin-top: -3px;
-    width: 90%;
+    padding: 2vh;
+    width: 95%;
     height: 20vw;
     cursor: pointer;
 }
@@ -43,6 +49,12 @@ input[type="file"] {
 
 .titleWrapper{
    display: flex;
+}
+#upperTitle{
+    margin-top: 2vh;
+}
+#lowerTitle{
+    margin-bottom: 8vh;
 }
 
 .titleText{
@@ -71,7 +83,7 @@ input[type="file"] {
     border-radius: 10px;
     border: 1px solid #ccc;
     padding: 10px;
-    margin: 1%;
+    margin: 1vh;
     color: #ccc;
 }
 
@@ -80,7 +92,7 @@ input[type="file"] {
     width: 25vw;
     height: 100vh;
     margin: 0px;
-    padding: 20px;
+    padding: 2vh;
 }
 
 .sidebarBox{
@@ -88,38 +100,41 @@ input[type="file"] {
     background-color: #28282B;
     flex-direction: column;
     border: 1px solid #ccc;
-    padding: 6px 12px;
+    padding: 1vh;
     height: 20vw;
     border-radius: 10px;
 
 }
 .subtitle{
-    margin-top: 30px;
+    margin-top: 2vh;
     color:#FAF9F6;
-    margin-bottom: 3px;
+    margin-bottom: 1vh;
 }
 .sidebarBtn{
     border-radius: 10px;
     border: 1px solid #ccc;
     padding: 10px;
-    margin: 1%;
+    margin: 1vh;
     width: auto;
 }
 
 #uploadWrapper{
+    display:flex;
+    flex-direction: column;
     width: 95%;
     border-radius: 10px;
     background-color: #1E1E1E;
     border: 0.5px solid #ccc;
-    margin: 1px;
+    margin: auto;
+    padding: 2vh;
     height: auto;
 }
 
 .filesHeader{
     color: #ccc;
     line-height: 10px;
-    padding-left: 10px;
-    padding-right: 10px;
+    padding-left: 1vh;
+    padding-right: 1vh;
 }
 
 .overrideItem{
@@ -157,8 +172,6 @@ input[type="file"] {
     line-height: 2%;
 }
 
-
-
 #uploadDiv{
     width: 100%;
     display: flex;
@@ -175,9 +188,9 @@ input[type="file"] {
     color: #ccc;
     border-bottom: 0.5px solid #ccc;
     justify-content: space-between;
-    margin: 1vw;
-    padding-bottom: 1vh;
-    margin-bottom: 1vh;
+    margin: 2vh;
+    padding-bottom: 2vh;
+    margin-bottom: 2vh;
 }
 .filetypeDropdown{
     background-color: #28282B;
@@ -196,7 +209,7 @@ input[type="file"] {
 
 #commandSelect{
     margin: auto;
-    margin-left: 10px;
+    margin-left: 2vh;
     width:150px;
     height: 4vh;
     color: #ccc;
@@ -213,6 +226,6 @@ input[type="file"] {
     border-radius: 10px;
     border: 1px solid #ccc;
     padding: 10px;
-    margin: 1%;
+    margin: 2vh;
     width: 25vw;
 }

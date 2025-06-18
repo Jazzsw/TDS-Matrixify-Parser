@@ -12,10 +12,10 @@
         <div id="sidebar">
 
             <div class="titlebar"></div>
-            <div class="titleWrapper">
+            <div id="upperTitle" class="titleWrapper">
                 <h1 class="titleText">THE DOOR STORE</h1><br>
             </div>
-            <div class="titleWrapper">
+            <div id="lowerTitle" class="titleWrapper">
                 <p class="titleText">Matrixify Parser</h1><br>
             </div>
 
@@ -40,13 +40,13 @@
                         <input id="overridePrice" class="textInput" type="text" placeholder="Price" style="width:50%">
                         </div>
 
-                        <button id="overrideBtn" class="sidebarBtn" style="width: 99%;">Add Item Override</button>
+                        <button id="overrideBtn" class="sidebarBtn" style="width:94%">Add Item Override</button>
                     </div>
 
                 </div>
         </div>
 
-        <div id="content" style="margin: 10px; flex-grow: 1; display:flex; flex-direction: column;">
+        <div id="content">
             <div style="width: 100%;">
                 <h3 class="bodyText">Upload Files</h3>
 
@@ -66,8 +66,8 @@
             </div>
 
             <div>
-                <div id ="uploadWrapper" style="margin-top: 10px;">
-                    <h3 class="bodyText" style="margin-left: 10px; margin-bottom: 0px;">Your Files</h3>
+                <div id ="uploadWrapper" style="margin-top: 2vh;">
+                    <h3 class="bodyText" style="margin-left: 2vh; margin-bottom: 0px;">Your Files</h3>
                     
                     <div style="height:30px; display: flex; justify-content: space-between; border-bottom: 0.5px solid #ccc; text-align: flex-start; margin: 1vw; margin-top: 0px; margin-bottom: 3px;">
                         <p class="filesHeader">File Name</p>
@@ -76,7 +76,7 @@
                     </div>
 
                     <div id="filesWrapper" style="display: flex; flex-direction: column;">
-                    <h3 id="filesEmptyText" class="filesHeader" style="margin: auto; margin-top: 3vh; margin-bottom: 3vh; font-size: medium;">Files you upload will appear here</h3>
+                    <h3 id="filesEmptyText" class="filesHeader" style="margin: auto; margin-top: 2vh; margin-bottom: 2vh; font-size: medium;">Files you upload will appear here</h3>
                     </div>
 
                 </div>
