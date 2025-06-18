@@ -107,7 +107,7 @@ tagNode.addEventListener("keyup", function(event) {
 
             const deleteBtn = document.createElement('span');
             deleteBtn.className = 'deleteTag';
-            deleteBtn.textContent = ' X ';
+            deleteBtn.textContent = 'Delete';
 
             deleteBtn.addEventListener('click', () => {
                 newElement.remove();
@@ -143,7 +143,7 @@ document.getElementById("tagBtn").addEventListener('click', function(){
 
             const deleteBtn = document.createElement('span');
             deleteBtn.className = 'deleteTag';
-            deleteBtn.textContent = ' X ';
+            deleteBtn.textContent = 'Delete';
 
             deleteBtn.addEventListener('click', () => {
                 newElement.remove();

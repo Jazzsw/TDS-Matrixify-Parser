@@ -94,9 +94,7 @@ input[type="file"] {
 .subtitle{
     margin-top: 30px;
     color: #ccc;
-    line-height: 5px;
-    
-
+    margin-bottom: 3px;
 }
 .sidebarBtn{
     border-radius: 10px;
@@ -145,3 +143,17 @@ input[type="file"] {
     color: grey;
     line-height: 2%;
 }
+
+
+
+#uploadDiv{
+    width: 100%;
+    display: flex;
+    justify-content: end;
+}
+
+#uploadTextWrapper{
+    margin: auto;
+    margin-bottom: 2vh;
+}
+
