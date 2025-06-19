@@ -1,23 +1,25 @@
 import ExcelJS from 'https://cdn.jsdelivr.net/npm/exceljs/+esm';
 
-var tagsArr = []
-var overridesArr =[]
+// Arrays to store bulk update tags and price overrides
+var tagsArr = [] // array of strings (tags)
+var overridesArr =[] // array of objects ({code:"code", price:"price"})
 
 // Price Override
-let overridesCount = 0;
+let overridesCount = 0; // counter to tell when overrides are empty for display
 
 const overrideNode = document.getElementById("overridePrice");
-overrideNode.addEventListener("keyup", function(event) {
+overrideNode.addEventListener("keyup", function(event) { // detect enter key
     if (event.key === "Enter") {
         let code = document.getElementById("overrideCode").value;
         let price = document.getElementById("overridePrice").value;
         let emptyText = document.getElementById("overrideInnerText");
 
-        if(code != "" && price != ""){
+        if(code != "" && price != ""){ // Only work if there is content in the inputs
 
-            let overrideObj = {"code": code, "price": price}
-            overridesArr.push(overrideObj)
+            let overrideObj = {"code": code, "price": price} //create object based on inputs
+            overridesArr.push(overrideObj) //push object to array
 
+            //create the div and text for the override
             var newText = document.createTextNode(code + "____$" + price);
             var newElement = document.createElement("div");
             newElement.className = "overrideItem"
@@ -29,6 +31,7 @@ overrideNode.addEventListener("keyup", function(event) {
             deleteBtn.className = 'deleteOverride';
             deleteBtn.textContent = 'Delete';
 
+            //create the delete logic for the delete button
             deleteBtn.addEventListener('click', () => {
                 newElement.remove();
                 overridesCount--
@@ -40,9 +43,11 @@ overrideNode.addEventListener("keyup", function(event) {
 
             newElement.appendChild(deleteBtn)
 
+            //clear the inputs
             document.getElementById("overrideCode").value = ""
             document.getElementById("overridePrice").value = ""
 
+            //edit the empty text if there is more than 0 elements
             emptyText.style.display = "none"
             overridesCount++
   } 
@@ -53,40 +58,44 @@ overrideNode.addEventListener("keyup", function(event) {
 document.getElementById("overrideBtn").addEventListener('click', function(){
   
     let code = document.getElementById("overrideCode").value;
-    let price = document.getElementById("overridePrice").value;
-    let emptyText = document.getElementById("overrideInnerText");
+        let price = document.getElementById("overridePrice").value;
+        let emptyText = document.getElementById("overrideInnerText");
 
-    if(code != "" && price != ""){
+        if(code != "" && price != ""){ // Only work if there is content in the inputs
 
-    let overrideObj = {"code": code, "price": price}
-    overridesArr.push(overrideObj)
+            let overrideObj = {"code": code, "price": price} //create object based on inputs
+            overridesArr.push(overrideObj) //push object to array
 
-    var newText = document.createTextNode(code + "_____$" + price);
-    var newElement = document.createElement("div");
-    newElement.className = "overrideItem"
+            //create the div and text for the override
+            var newText = document.createTextNode(code + "____$" + price);
+            var newElement = document.createElement("div");
+            newElement.className = "overrideItem"
 
-    newElement.appendChild(newText)
-    document.getElementById("overridesWrapper").prepend(newElement);
+            newElement.appendChild(newText)
+            document.getElementById("overridesWrapper").prepend(newElement);
 
-    const deleteBtn = document.createElement('span');
-    deleteBtn.className = 'deleteOverride';
-    deleteBtn.textContent = 'Delete';
+            const deleteBtn = document.createElement('span');
+            deleteBtn.className = 'deleteOverride';
+            deleteBtn.textContent = 'Delete';
 
-    deleteBtn.addEventListener('click', () => {
-      newElement.remove();
-      overridesCount--;
-      if(overridesCount == 0){
-            emptyText.style.display = "block"
-        }
-    });
+            //create the delete logic for the delete button
+            deleteBtn.addEventListener('click', () => {
+                newElement.remove();
+                overridesCount--
+                if(overridesCount == 0){
+                    emptyText.style.display = "block"
+                }
+            });
 
-    newElement.appendChild(deleteBtn)
+            newElement.appendChild(deleteBtn)
 
-    document.getElementById("overrideCode").value = ""
-    document.getElementById("overridePrice").value = ""
-    
-    emptyText.style.display = "none"
-    overridesCount++
+            //clear the inputs
+            document.getElementById("overrideCode").value = ""
+            document.getElementById("overridePrice").value = ""
+
+            //edit the empty text if there is more than 0 elements
+            emptyText.style.display = "none"
+            overridesCount++
   } 
 })
 
@@ -107,13 +116,14 @@ let tagsCount = 0;
 const tagNode = document.getElementById("addTag");
 tagNode.addEventListener("keyup", function(event) {
     if (event.key === "Enter") {
+
         let tag = document.getElementById("addTag").value;
         let emptyText = document.getElementById("tagsInnerText");
 
-        if(tag != ""){
+        if(tag != ""){// only work if there is text in the input
+            tagsArr.push(tag) // push tag to the array
 
-            tagsArr.push(tag)
-
+            //create div and text for the new element
             var newText = document.createTextNode(tag);
             var newElement = document.createElement("div");
             newElement.className = "tagItem"
@@ -125,6 +135,7 @@ tagNode.addEventListener("keyup", function(event) {
             deleteBtn.className = 'deleteTag';
             deleteBtn.textContent = 'Delete';
 
+            // create delete logic for the delete button and append it 
             deleteBtn.addEventListener('click', () => {
                 newElement.remove();
                 tagsCount--
@@ -135,7 +146,7 @@ tagNode.addEventListener("keyup", function(event) {
 
             newElement.appendChild(deleteBtn)
 
-            document.getElementById("addTag").value = ""
+            document.getElementById("addTag").value = "" //clear input field 
 
             emptyText.style.display = "none"
             tagsCount++
@@ -147,12 +158,12 @@ tagNode.addEventListener("keyup", function(event) {
 document.getElementById("tagBtn").addEventListener('click', function(){
   
     let tag = document.getElementById("addTag").value;
-    let emptyText = document.getElementById("tagsInnerText");
+        let emptyText = document.getElementById("tagsInnerText");
 
-        if(tag != ""){
+        if(tag != ""){// only work if there is text in the input
+            tagsArr.push(tag) // push tag to the array
 
-            tagsArr.push(tag)
-
+            //create div and text for the new element
             var newText = document.createTextNode(tag);
             var newElement = document.createElement("div");
             newElement.className = "tagItem"
@@ -164,9 +175,10 @@ document.getElementById("tagBtn").addEventListener('click', function(){
             deleteBtn.className = 'deleteTag';
             deleteBtn.textContent = 'Delete';
 
+            // create delete logic for the delete button and append it 
             deleteBtn.addEventListener('click', () => {
                 newElement.remove();
-                tagsCount--;
+                tagsCount--
                 if(tagsCount == 0){
                     emptyText.style.display = "block"
                 }
@@ -174,10 +186,10 @@ document.getElementById("tagBtn").addEventListener('click', function(){
 
             newElement.appendChild(deleteBtn)
 
-            document.getElementById("addTag").value = "";
+            document.getElementById("addTag").value = "" //clear input field 
 
             emptyText.style.display = "none"
-            tagsCount++;
+            tagsCount++
   } 
 })
 
@@ -196,10 +208,6 @@ dropZone.addEventListener('dragleave', () => {
     dropZone.classList.remove('hover');
 });
 
-//const c = document.getElementById('consoleText');
-//c.innerHTML = "Waiting for file...";
-
-
 dropZone.addEventListener('change', async (event) => {
     event.preventDefault();
     dropZone.classList.remove('hover');
@@ -212,7 +220,7 @@ dropZone.addEventListener('change', async (event) => {
       return;
     }
 
-    //c.innerHTML = (file.name)
+   
     addFile(file.name)
 
     const buffer = await file.arrayBuffer();
@@ -233,8 +241,8 @@ dropZone.addEventListener('change', async (event) => {
         let newDropdown = document.createElement("select");
         newDropdown.className = "filetypeDropdown"
         
-        let options = ["B&M Singles", "B&M Interior Sets"]
-        for (let i=0; i<options.length; i++){
+        let options = ["B&M Singles", "B&M Interior Sets"] //array of dropdown options (scales with the number of file types to be used)
+        for (let i=0; i<options.length; i++){//create an option element and append it for each array element 
             let newOption = document.createElement("option");
             newOption.text = options[i]
             newOption.appendChild(newText)
@@ -246,6 +254,7 @@ dropZone.addEventListener('change', async (event) => {
         deleteBtn.className = 'deleteTag';
         deleteBtn.textContent = 'Delete';
 
+        //delete logic for file remove
         deleteBtn.addEventListener('click', () => {
                 newContainer.remove();
                 filesCount--;
