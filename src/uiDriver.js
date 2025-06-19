@@ -247,9 +247,31 @@ dropZone.addEventListener('change', async (event) => {
         filesCount++;
         emptyText.style.display = "none"
 
-
-
-
-
   }
+
+
+document.getElementById("infoBtn").addEventListener('click', function(){
+    
+    let content = document.getElementById("content");
+    let sidebar = document.getElementById("sidebar");
+    let popup = document.getElementById("commandInfoPopup");
+
+    content.style.opacity = "10%"
+    sidebar.style.opacity = "10%"
+    popup.style.display = "flex"
+
+});
+
+document.getElementById("closeInfo").addEventListener('click', function(){
+
+    let content = document.getElementById("content");
+    let sidebar = document.getElementById("sidebar");
+    let popup = document.getElementById("commandInfoPopup");
+
+
+    content.style.opacity = "100%"
+    sidebar.style.opacity = "100%"
+    popup.style.display = "none"
+
+})
 

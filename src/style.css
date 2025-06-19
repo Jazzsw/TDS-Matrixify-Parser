@@ -247,7 +247,47 @@ input[type="file"] {
 #filesEmptyText{
     font-family: "Instrument Sans", sans-serif;
     margin: auto;
-    margin-top: 2vh;
+    margin-top: 3vh;
     margin-bottom: 2vh;
     font-size: medium;
+    font-weight: 400;
+}
+
+
+#commandInfoPopup{
+    background-color: #1E1E1E;
+    height: 70vh;
+    width: 100vh;
+    position: fixed;
+    right: 13%;
+    top: 13%;
+    z-index: 9;
+    border-radius: 10px;
+    display: none;
+    border: 0.5px solid #ccc;
+    color: #ccc;
+    padding: 2vh;
+    flex-direction: column;
+    
+}
+
+#closeInfo{
+    color: red;
+    margin: 2vh;
+    cursor: pointer;
+    width: 50px;
+    justify-self: end;
+}
+
+.warningText{
+    margin-top: 0px;
+    color: red;
+}
+.infoText{
+    margin-top: 8vh;
+}
+
+#infoTitle{
+    color: #ccc;
+    font-family: "Instrument Sans", sans-serif;
 }

@@ -47,6 +47,7 @@
         </div>
 
         <div id="content">
+
             <div style="width: 100%;">
                 <h3 class="bodyText">Upload Files</h3>
 
@@ -89,7 +90,8 @@
             
         <div id="commandWrapper">
             <h4 class="bodyText">Command Mode</h4>
-            <img src="./images/Question_Icon.png" style="width: 2vh; margin: auto; margin-left: 5px; cursor: pointer;">
+            <img id="infoBtn" src="./images/Question_Icon.png" style="width: 2vh; margin: auto; margin-left: 5px; cursor: pointer;">
+        
             <select id="commandSelect">
                 <option value="UPDATE">Update</option>
                 <option value="NEW">New</option>
@@ -102,7 +104,23 @@
 
         <!-- <p style="color: aliceblue;" id="consoleText">console empty</p> -->
 
-        
+    </div>
+
+
+    <div id="commandInfoPopup">
+
+        <div style="display:flex; justify-content: space-between; height: 6vh;">
+            <!-- <div><h5 id="infoTitle">Command Modes</h3></div> -->
+            <div><h3 id="closeInfo">Exit</h3></div>
+        <div>
+
+        <div style="margin-top: 8vh; margin-right: 8vh;">
+        <p><b>UPDATE (USE FOR MOST CASES):</b> The app will search for an existing Product and update it. If an item cannot be found then that item will be ignored</p>
+        <p class="infoText"><b>NEW:</b> Will try to create a new Product with the provided details. If such Product will already exist, then the result will be Failed.</p>
+        <p class="infoText" style="margin-bottom: 0px;"><b>MERGE:</b> Will try to find existing Product, and update it with data from the row. If such product will not be found, then it will create new.</p>
+        <p class="warningText">WARNING: If you upload a full pricelist (including items that you do not sell or have on the site) this mode will create new items on the site</p>
+        <p class="infoText"><b>DELETE:</b> The app will delete the existing Product. If such Product will not be found, then the result will be Failed.</p>
+        </div>
 
     </div>
        
