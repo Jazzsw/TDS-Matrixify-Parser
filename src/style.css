@@ -120,6 +120,7 @@ input[type="file"] {
     padding: 10px;
     margin: 1vh;
     width: auto;
+    cursor: pointer;
 }
 
 #uploadWrapper{
@@ -235,6 +236,7 @@ input[type="file"] {
     padding: 10px;
     margin: 2vh;
     width: 25vw;
+    cursor: pointer;
 }
 
 #formatInfo{

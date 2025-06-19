@@ -1,5 +1,8 @@
 import ExcelJS from 'https://cdn.jsdelivr.net/npm/exceljs/+esm';
 
+var tagsArr = []
+var overridesArr =[]
+
 // Price Override
 let overridesCount = 0;
 
@@ -11,6 +14,10 @@ overrideNode.addEventListener("keyup", function(event) {
         let emptyText = document.getElementById("overrideInnerText");
 
         if(code != "" && price != ""){
+
+            let overrideObj = {"code": code, "price": price}
+            overridesArr.push(overrideObj)
+
             var newText = document.createTextNode(code + "____$" + price);
             var newElement = document.createElement("div");
             newElement.className = "overrideItem"
@@ -50,6 +57,10 @@ document.getElementById("overrideBtn").addEventListener('click', function(){
     let emptyText = document.getElementById("overrideInnerText");
 
     if(code != "" && price != ""){
+
+    let overrideObj = {"code": code, "price": price}
+    overridesArr.push(overrideObj)
+
     var newText = document.createTextNode(code + "_____$" + price);
     var newElement = document.createElement("div");
     newElement.className = "overrideItem"
@@ -100,6 +111,9 @@ tagNode.addEventListener("keyup", function(event) {
         let emptyText = document.getElementById("tagsInnerText");
 
         if(tag != ""){
+
+            tagsArr.push(tag)
+
             var newText = document.createTextNode(tag);
             var newElement = document.createElement("div");
             newElement.className = "tagItem"
@@ -136,6 +150,9 @@ document.getElementById("tagBtn").addEventListener('click', function(){
     let emptyText = document.getElementById("tagsInnerText");
 
         if(tag != ""){
+
+            tagsArr.push(tag)
+
             var newText = document.createTextNode(tag);
             var newElement = document.createElement("div");
             newElement.className = "tagItem"
