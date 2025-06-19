@@ -50,7 +50,7 @@ overrideNode.addEventListener("keyup", function(event) { // detect enter key
             //edit the empty text if there is more than 0 elements
             emptyText.style.display = "none"
             overridesCount++
-  } 
+        } 
         
     }
 });
@@ -58,45 +58,46 @@ overrideNode.addEventListener("keyup", function(event) { // detect enter key
 document.getElementById("overrideBtn").addEventListener('click', function(){
   
     let code = document.getElementById("overrideCode").value;
-        let price = document.getElementById("overridePrice").value;
-        let emptyText = document.getElementById("overrideInnerText");
+    let price = document.getElementById("overridePrice").value;
+    let emptyText = document.getElementById("overrideInnerText");
 
-        if(code != "" && price != ""){ // Only work if there is content in the inputs
+    if(code != "" && price != ""){ // Only work if there is content in the inputs
 
-            let overrideObj = {"code": code, "price": price} //create object based on inputs
-            overridesArr.push(overrideObj) //push object to array
+        let overrideObj = {"code": code, "price": price} //create object based on inputs
+        overridesArr.push(overrideObj) //push object to array
 
-            //create the div and text for the override
-            var newText = document.createTextNode(code + "____$" + price);
-            var newElement = document.createElement("div");
-            newElement.className = "overrideItem"
+        //create the div and text for the override
+        var newText = document.createTextNode(code + "____$" + price);
+        var newElement = document.createElement("div");
+        newElement.className = "overrideItem"
 
-            newElement.appendChild(newText)
-            document.getElementById("overridesWrapper").prepend(newElement);
+        newElement.appendChild(newText)
+        document.getElementById("overridesWrapper").prepend(newElement);
 
-            const deleteBtn = document.createElement('span');
-            deleteBtn.className = 'deleteOverride';
-            deleteBtn.textContent = 'Delete';
+        const deleteBtn = document.createElement('span');
+        deleteBtn.className = 'deleteOverride';
+        deleteBtn.textContent = 'Delete';
 
-            //create the delete logic for the delete button
-            deleteBtn.addEventListener('click', () => {
-                newElement.remove();
-                overridesCount--
-                if(overridesCount == 0){
-                    emptyText.style.display = "block"
-                }
-            });
+        //create the delete logic for the delete button
+        deleteBtn.addEventListener('click', () => {
+            newElement.remove();
+            overridesCount--
+                
+            if(overridesCount == 0){
+                emptyText.style.display = "block"
+            }
+        });
 
-            newElement.appendChild(deleteBtn)
+        newElement.appendChild(deleteBtn)
 
-            //clear the inputs
-            document.getElementById("overrideCode").value = ""
-            document.getElementById("overridePrice").value = ""
+        //clear the inputs
+        document.getElementById("overrideCode").value = ""
+        document.getElementById("overridePrice").value = ""
 
-            //edit the empty text if there is more than 0 elements
-            emptyText.style.display = "none"
-            overridesCount++
-  } 
+        //edit the empty text if there is more than 0 elements
+        emptyText.style.display = "none"
+        overridesCount++
+    } 
 })
 
 //swap focus to the second input
@@ -150,7 +151,7 @@ tagNode.addEventListener("keyup", function(event) {
 
             emptyText.style.display = "none"
             tagsCount++
-  } 
+        } 
         
     }
 });
@@ -158,39 +159,39 @@ tagNode.addEventListener("keyup", function(event) {
 document.getElementById("tagBtn").addEventListener('click', function(){
   
     let tag = document.getElementById("addTag").value;
-        let emptyText = document.getElementById("tagsInnerText");
+    let emptyText = document.getElementById("tagsInnerText");
 
-        if(tag != ""){// only work if there is text in the input
-            tagsArr.push(tag) // push tag to the array
+    if(tag != ""){// only work if there is text in the input
+        tagsArr.push(tag) // push tag to the array
 
-            //create div and text for the new element
-            var newText = document.createTextNode(tag);
-            var newElement = document.createElement("div");
-            newElement.className = "tagItem"
+        //create div and text for the new element
+        var newText = document.createTextNode(tag);
+        var newElement = document.createElement("div");
+        newElement.className = "tagItem"
 
-            newElement.appendChild(newText)
-            document.getElementById("tagsWrapper").prepend(newElement);
+        newElement.appendChild(newText)
+        document.getElementById("tagsWrapper").prepend(newElement);
 
-            const deleteBtn = document.createElement('span');
-            deleteBtn.className = 'deleteTag';
-            deleteBtn.textContent = 'Delete';
+        const deleteBtn = document.createElement('span');
+        deleteBtn.className = 'deleteTag';
+        deleteBtn.textContent = 'Delete';
 
-            // create delete logic for the delete button and append it 
-            deleteBtn.addEventListener('click', () => {
-                newElement.remove();
-                tagsCount--
-                if(tagsCount == 0){
-                    emptyText.style.display = "block"
-                }
-            });
+        // create delete logic for the delete button and append it 
+        deleteBtn.addEventListener('click', () => {
+            newElement.remove();
+            tagsCount--
+            if(tagsCount == 0){
+                emptyText.style.display = "block"
+            }
+        });
 
-            newElement.appendChild(deleteBtn)
+        newElement.appendChild(deleteBtn)
 
-            document.getElementById("addTag").value = "" //clear input field 
+        document.getElementById("addTag").value = "" //clear input field 
 
-            emptyText.style.display = "none"
-            tagsCount++
-  } 
+        emptyText.style.display = "none"
+        tagsCount++
+    } 
 })
 
 
@@ -199,6 +200,7 @@ let filesCount = 0;
 
 //File Upload
 var dropZone = document.getElementById("dropBox")
+
 dropZone.addEventListener('dragover', (e) => {
     e.preventDefault();
     dropZone.classList.add('hover');
@@ -220,7 +222,6 @@ dropZone.addEventListener('change', async (event) => {
       return;
     }
 
-   
     addFile(file.name)
 
     const buffer = await file.arrayBuffer();
@@ -231,53 +232,52 @@ dropZone.addEventListener('change', async (event) => {
   });
 
   function addFile(filename){
-        let parent = document.getElementById("filesWrapper")
+    let parent = document.getElementById("filesWrapper")
 
-        let newContainer = document.createElement("div")
-        let newText = document.createTextNode(filename)
-        let emptyText = document.getElementById("filesEmptyText")
-        newContainer.className = "fileBar"
+    let newContainer = document.createElement("div")
+    let newText = document.createTextNode(filename)
+    let emptyText = document.getElementById("filesEmptyText")
+    newContainer.className = "fileBar"
 
-        let newDropdown = document.createElement("select");
-        newDropdown.className = "filetypeDropdown"
+    let newDropdown = document.createElement("select");
+    newDropdown.className = "filetypeDropdown"
         
-        let options = ["B&M Singles", "B&M Interior Sets"] //array of dropdown options (scales with the number of file types to be used)
-        for (let i=0; i<options.length; i++){//create an option element and append it for each array element 
-            let newOption = document.createElement("option");
-            newOption.text = options[i]
-            newOption.appendChild(newText)
-            newDropdown.appendChild(newOption);
-        }
+    let options = ["B&M Singles", "B&M Interior Sets"] //array of dropdown options (scales with the number of file types to be used)
+    for (let i=0; i<options.length; i++){//create an option element and append it for each array element 
+        let newOption = document.createElement("option");
+        newOption.text = options[i]
+        newOption.appendChild(newText)
+        newDropdown.appendChild(newOption);
+    }
          
 
-        const deleteBtn = document.createElement('span');
-        deleteBtn.className = 'deleteTag';
-        deleteBtn.textContent = 'Delete';
+    const deleteBtn = document.createElement('span');
+    deleteBtn.className = 'deleteTag';
+    deleteBtn.textContent = 'Delete';
 
-        //delete logic for file remove
-        deleteBtn.addEventListener('click', () => {
-                newContainer.remove();
-                filesCount--;
-                if(filesCount == 0){
-                    emptyText.style.display = "block"
-                }
-            });
+    //delete logic for file remove
+    deleteBtn.addEventListener('click', () => {
+        newContainer.remove();
+        filesCount--;
+        if(filesCount == 0){
+            emptyText.style.display = "block"
+        }
+    });
 
-        newContainer.appendChild(newText);
-        newContainer.appendChild(newDropdown);
-        newContainer.appendChild(deleteBtn);
+    newContainer.appendChild(newText);
+    newContainer.appendChild(newDropdown);
+    newContainer.appendChild(deleteBtn);
 
-        parent.appendChild(newContainer)
-
-
-        filesCount++;
-        emptyText.style.display = "none"
-
-  }
+    parent.appendChild(newContainer)
 
 
-document.getElementById("infoBtn").addEventListener('click', function(){
-    
+    filesCount++;
+    emptyText.style.display = "none"
+
+}
+
+
+document.getElementById("infoBtn").addEventListener('click', function(){ 
     let content = document.getElementById("content");
     let sidebar = document.getElementById("sidebar");
     let popup = document.getElementById("commandInfoPopup");
@@ -289,7 +289,6 @@ document.getElementById("infoBtn").addEventListener('click', function(){
 });
 
 document.getElementById("closeInfo").addEventListener('click', function(){
-
     let content = document.getElementById("content");
     let sidebar = document.getElementById("sidebar");
     let popup = document.getElementById("commandInfoPopup");
