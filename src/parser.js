@@ -7,13 +7,33 @@ document.getElementById("createFile").addEventListener('click', function(){
 
     let commandMode = document.getElementById("commandSelect").value
 
-    alert(commandMode)
+    let filePairings =[]
+
+    let dropDownElements = document.getElementsByClassName("filetypeDropdown")
+    let index = 0;
+
+    Array.from(dropDownElements).forEach(function (element) {//loop for each dropdown pair it with the corresponding file object 
+        let pair = {"file": fileObjList[index], "type": element.value}
+        filePairings.push (pair)
+        index++;
+    })
 
 
-    // for (let i = 0; i<overridesArr.length; i++){
-    //     alert(JSON.stringify(overridesArr[i]))
-    // }
+    for (let i = 0; i<filePairings.length; i++){
+        switch (filePairings[i].type){
+            case "B&M Singles":
+                parseBM(filePairings[i].file, commandMode);
+                break;
 
+        }
 
+    }
 
 })
+
+function parseBM(file, mode){
+    
+
+
+
+}
