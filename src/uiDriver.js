@@ -1,8 +1,9 @@
 import ExcelJS from 'https://cdn.jsdelivr.net/npm/exceljs/+esm';
 
 // Arrays to store bulk update tags and price overrides
-var tagsArr = [] // array of strings (tags)
-var overridesArr =[] // array of objects ({code:"code", price:"price"})
+export var tagsArr = [] // array of strings (tags)
+export var overridesArr =[] // array of objects ({code:"code", price:"price"})
+export var fileObjList = [] // array of each file object
 
 // Price Override
 let overridesCount = 0; // counter to tell when overrides are empty for display
@@ -33,6 +34,10 @@ overrideNode.addEventListener("keyup", function(event) { // detect enter key
 
             //create the delete logic for the delete button
             deleteBtn.addEventListener('click', () => {
+
+                let index = overridesArr.indexOf(overrideObj);
+                overridesArr.splice(index, 1)
+                
                 newElement.remove();
                 overridesCount--
                 if(overridesCount == 0){
@@ -80,6 +85,10 @@ document.getElementById("overrideBtn").addEventListener('click', function(){
 
         //create the delete logic for the delete button
         deleteBtn.addEventListener('click', () => {
+
+            let index = overridesArr.indexOf(overrideObj);
+            overridesArr.splice(index, 1)
+
             newElement.remove();
             overridesCount--
                 
@@ -138,6 +147,10 @@ tagNode.addEventListener("keyup", function(event) {
 
             // create delete logic for the delete button and append it 
             deleteBtn.addEventListener('click', () => {
+
+                let index = tagsArr.indexOf(tag);
+                tagsArr.splice(index, 1)
+
                 newElement.remove();
                 tagsCount--
                 if(tagsCount == 0){
@@ -178,6 +191,10 @@ document.getElementById("tagBtn").addEventListener('click', function(){
 
         // create delete logic for the delete button and append it 
         deleteBtn.addEventListener('click', () => {
+
+            let index = tagsArr.indexOf(tag);
+            tagsArr.splice(index, 1)
+
             newElement.remove();
             tagsCount--
             if(tagsCount == 0){
@@ -222,7 +239,7 @@ dropZone.addEventListener('change', async (event) => {
       return;
     }
 
-    addFile(file.name)
+    addFile(file)
 
     const buffer = await file.arrayBuffer();
 
@@ -231,7 +248,11 @@ dropZone.addEventListener('change', async (event) => {
 
   });
 
-  function addFile(filename){
+  function addFile(file){
+
+    fileObjList.push(file);
+
+    let filename = file.name
     let parent = document.getElementById("filesWrapper")
 
     let newContainer = document.createElement("div")
@@ -258,6 +279,10 @@ dropZone.addEventListener('change', async (event) => {
     //delete logic for file remove
     deleteBtn.addEventListener('click', () => {
         newContainer.remove();
+
+        let index = fileObjList.indexOf(file);
+        fileObjList.splice(index, 1)
+
         filesCount--;
         if(filesCount == 0){
             emptyText.style.display = "block"
@@ -299,4 +324,5 @@ document.getElementById("closeInfo").addEventListener('click', function(){
     popup.style.display = "none"
 
 })
+
 
