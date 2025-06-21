@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "dropzone": "^6.0.0-beta.2",
-    "exceljs": "^4.4.0"
+    "exceljs": "^4.4.0",
+    "file-saver": "^2.0.5"
   }
 }
