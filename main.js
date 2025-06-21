@@ -1,5 +1,5 @@
 const { app, BrowserWindow } = require('electron/main')
-
+const { ipcMain } = require('electron');
 
 //Simple window creation with browserWindow loading layout from index 
   const createWindow = () => {
@@ -31,3 +31,9 @@ app.on('window-all-closed', () => {
     app.quit()
   //}
 })
+
+
+
+
+
+

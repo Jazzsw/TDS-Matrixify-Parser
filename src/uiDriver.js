@@ -326,3 +326,27 @@ document.getElementById("closeInfo").addEventListener('click', function(){
 })
 
 
+document.getElementById("formatInfo").addEventListener('click', function(){
+    let content = document.getElementById("content");
+    let sidebar = document.getElementById("sidebar");
+    // content.style.opacity = "10%"
+    // sidebar.style.opacity = "10%"
+    document.getElementById("formatPopup").style.display = "block"
+
+    
+})
+
+
+document.getElementById("closeFormat").addEventListener('click', function(){
+    let content = document.getElementById("content");
+    let sidebar = document.getElementById("sidebar");
+    let popup = document.getElementById("formatPopup");
+
+
+    content.style.opacity = "100%"
+    sidebar.style.opacity = "100%"
+    popup.style.display = "none"
+
+})
+
+

@@ -7,13 +7,11 @@ import { saveAs } from 'https://cdn.skypack.dev/file-saver';
 document.getElementById("createFile").addEventListener('click', function(){
 
     let commandMode = document.getElementById("commandSelect").value
-
-    console.log(JSON.stringify(tagsArr));
-
     let filePairings =[]
 
     let dropDownElements = document.getElementsByClassName("filetypeDropdown")
     let index = 0;
+    
 
     Array.from(dropDownElements).forEach(function (element) {//loop for each dropdown pair it with the corresponding file object 
         let pair = {"file": fileObjList[index], "type": element.value}
@@ -24,7 +22,7 @@ document.getElementById("createFile").addEventListener('click', function(){
     for (let i = 0; i<filePairings.length; i++){
         switch (filePairings[i].type){
             case "B&M Singles":
-                parseBM(filePairings[i].file, commandMode);
+                parseBM(filePairings[i].file, commandMode, 1, 6);
                 break;
 
         }
@@ -33,7 +31,9 @@ document.getElementById("createFile").addEventListener('click', function(){
 
 })
 
-async function parseBM(file, mode){
+async function parseBM(file, mode, skuCol, priceCol){
+
+
 
         const downloadWorkbook = new ExcelJS.Workbook();
         const downloadSheet = downloadWorkbook.addWorksheet('Products');
@@ -55,18 +55,24 @@ async function parseBM(file, mode){
         //alert(worksheet.name);
         
         worksheet.eachRow((row, rowNumber) => {
-            let SKU = row.values[1] // find SKU
+            let SKU = row.values[skuCol] // find SKU
             let lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
             let code = SKU.slice(lastIndex);
             let prefix = SKU.slice(0,lastIndex);
-            let price = row.values[6].result
+            let price = row.values[priceCol].result
             
 
             SKU = replaceCode(prefix, code);
             SKU = "BM-".concat(SKU);
             
+            for(let i = 0 ; i<overridesArr.length; i++){
+                if(SKU == overridesArr[i].code){
+                    price = parseInt(overridesArr[i].price);
+                    console.log("price for "+ SKU + " was overrided to "+ price)
+                }
+            }
+            
             if(SKU.length < 50){
-                console.log(arrToStr(tagsArr))
                 downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)});
             }
 
@@ -130,4 +136,10 @@ function replaceCode(SKU, code){
 
 function arrToStr(array){
     return array.join(",");
+}
+
+
+
+function findDiff(file, code){
+
 }
