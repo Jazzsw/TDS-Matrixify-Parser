@@ -4,6 +4,7 @@ import ExcelJS from 'https://cdn.jsdelivr.net/npm/exceljs/+esm';
 export var tagsArr = [] // array of strings (tags)
 export var overridesArr =[] // array of objects ({code:"code", price:"price"})
 export var fileObjList = [] // array of each file object
+export var fileFormats = [] // save the SKU and price columns for each supported file type
 
 // Price Override
 let overridesCount = 0; // counter to tell when overrides are empty for display
@@ -40,7 +41,7 @@ overrideNode.addEventListener("keyup", function(event) { // detect enter key
                 
                 newElement.remove();
                 overridesCount--
-                if(overridesCount == 0){
+                if(overridesCount == 0){//if there are no overrides, show the placeholder text
                     emptyText.style.display = "block"
                 }
                 
@@ -329,8 +330,8 @@ document.getElementById("closeInfo").addEventListener('click', function(){
 document.getElementById("formatInfo").addEventListener('click', function(){
     let content = document.getElementById("content");
     let sidebar = document.getElementById("sidebar");
-    // content.style.opacity = "10%"
-    // sidebar.style.opacity = "10%"
+    content.style.opacity = "10%"
+    sidebar.style.opacity = "10%"
     document.getElementById("formatPopup").style.display = "block"
 
     

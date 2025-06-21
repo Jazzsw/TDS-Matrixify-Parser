@@ -106,31 +106,38 @@
 
     </div>
 
+    <div id="formatPopup">
+        <div>
+            <p>B&M Singles</p>
+            <div style="display: flex">
+            <p>SKU Column</p><input type="text" value="1" class="formatInput"> <p>Price Column</p><input type="text" value="6" class="formatInput">
+            </div>
+
+        </div>
+
+        <button class="sidebarBtn" id="closeFormat">Save and Exit</button>
+
+    </div>
+
 
     <div id="commandInfoPopup">
 
         <div style="display:flex; justify-content: space-between; height: 6vh;">
             <!-- <div><h5 id="infoTitle">Command Modes</h3></div> -->
-            <div><h3 id="closeInfo">Exit</h3></div>
+            <!-- <div><h3 id="closeInfo">Exit</h3></div> -->
         <div>
 
-        <div style="margin-top: 8vh; margin-right: 8vh;">
+        <div style="margin-top: 5vh; margin-right: 8vh;">
         <p><b>UPDATE (USE FOR MOST CASES):</b> The app will search for an existing Product and update it. If an item cannot be found then that item will be ignored</p>
         <p class="infoText"><b>NEW:</b> Will try to create a new Product with the provided details. If such Product will already exist, then the result will be Failed.</p>
         <p class="infoText" style="margin-bottom: 0px;"><b>MERGE:</b> Will try to find existing Product, and update it with data from the row. If such product will not be found, then it will create new.</p>
         <p class="warningText">WARNING: If you upload a full pricelist (including items that you do not sell or have on the site) this mode will create new items on the site</p>
         <p class="infoText"><b>DELETE:</b> The app will delete the existing Product. If such Product will not be found, then the result will be Failed.</p>
         </div>
+        <button class="sidebarBtn" id="closeInfo" style="width: 50px; margin-bottom: 2vh;">Exit</button>
 
     </div>
 
-
-    <div id="formatPopup">
-        <h3 id="closeFormat">Exit</h3>
-        <p> this is some text</p>
-        <button>exit</button>
-
-    </div>
        
     
         <script src="index.js"></script>
