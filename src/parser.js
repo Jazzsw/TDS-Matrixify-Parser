@@ -38,7 +38,7 @@ document.getElementById("createFile").addEventListener('click', async function()
         switch (filePairings[i].type){
             case "B&M Singles":
                 console.log("B&M TRIGGERED")
-                parseBM(filePairings[i].file, commandMode, 1, 6);
+                await parseBM(filePairings[i].file, 1, 6);
                 writeFile(masterFile, commandMode, BM_map)
                 break;
         }
@@ -292,8 +292,8 @@ async function writeFile(file, mode, map){
                 prefix = SKU.slice(0,lastIndex);
                 SKU = replaceCode(prefix, code);
 
-                console.log("SKU SEARCH:" + SKU)
-                console.log("PRE SEARCH:" + prefix)
+                //console.log("SKU SEARCH:" + SKU)
+                console.log("PRE SEARCH:" + map.get(prefix))
 
 
                 if(map.get(prefix) != undefined){ // try to find the corresponding item in the good price map 
@@ -305,7 +305,7 @@ async function writeFile(file, mode, map){
                 }
                 // if the current item being processed is a custom variant then take the C3NL price stored in newPrice and add the diff for this item before saving
                 if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){ // if the code is one of the custom finishes, then set the price to the C3NL price plus the pre-calculated diff
-                    console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: "+map.get(prefix).price )
+                    console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
                     price = newPrice + (existingData.get(prefix).diff)
                 }
 
@@ -315,7 +315,7 @@ async function writeFile(file, mode, map){
     })
 
     console.log("WRITE COMPLETE")
-    
+
     //trigger download logic 
     downloadWorkbook.xlsx.writeBuffer().then((buffer) => { //convert buffer to blob and trigger download
           const blob = new Blob([buffer], {
