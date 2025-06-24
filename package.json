@@ -4,7 +4,7 @@
   "description": "Parser for matrixify",
   "main": "main.js",
   "scripts": {
-    "start": "electron .",
+    "start": "electron . --trace-warnings",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "dropzone": "^6.0.0-beta.2",
+    "electron-settings": "^4.0.4",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5"
   }

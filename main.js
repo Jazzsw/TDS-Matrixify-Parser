@@ -1,5 +1,7 @@
 const { app, BrowserWindow } = require('electron/main')
 const { ipcMain } = require('electron');
+const electron = require('electron')
+const settings = require('electron-settings');
 
 //Simple window creation with browserWindow loading layout from index 
   const createWindow = () => {
@@ -7,8 +9,15 @@ const { ipcMain } = require('electron');
      // remove the default titlebar
     titleBarStyle: 'hidden',
     // expose window controls in Windows/Linux
-    ...(process.platform !== 'darwin' ? { titleBarOverlay: true } : {})
+    ...(process.platform !== 'darwin' ? { titleBarOverlay: true } : {}),
+
+    webPreferences: {
+      preload: '/src/preload.js',
+      contextIsolation: true,
+      nodeIntegration: false,
+    },
   })
+  
 
   win.loadFile('src/index.html')
   win.setMinimumSize(800, 600)
@@ -31,6 +40,11 @@ app.on('window-all-closed', () => {
     app.quit()
   //}
 })
+
+
+
+
+
 
 
 

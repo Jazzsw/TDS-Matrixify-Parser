@@ -264,7 +264,7 @@ dropZone.addEventListener('change', async (event) => {
     let newDropdown = document.createElement("select");
     newDropdown.className = "filetypeDropdown"
         
-    let options = ["B&M Singles", "B&M Interior Sets"] //array of dropdown options (scales with the number of file types to be used)
+    let options = ["Current Shopify Data","B&M Singles", "B&M Interior Sets"] //array of dropdown options (scales with the number of file types to be used)
     for (let i=0; i<options.length; i++){//create an option element and append it for each array element 
         let newOption = document.createElement("option");
         newOption.text = options[i]
