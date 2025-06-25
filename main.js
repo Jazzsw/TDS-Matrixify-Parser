@@ -10,7 +10,7 @@ const settings = require('electron-settings');
     titleBarStyle: 'hidden',
     // expose window controls in Windows/Linux
     ...(process.platform !== 'darwin' ? { titleBarOverlay: true } : {}),
-
+    icon: './src/images/Icon_V2',
     webPreferences: {
       preload: '/src/preload.js',
       contextIsolation: true,
