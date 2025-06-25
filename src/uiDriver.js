@@ -4,10 +4,11 @@ import ExcelJS from 'https://cdn.jsdelivr.net/npm/exceljs/+esm';
 export var tagsArr = [] // array of strings (tags)
 export var overridesArr =[] // array of objects ({code:"code", price:"price"})
 export var fileObjList = [] // array of each file object
-export var fileFormats = [] // save the SKU and price columns for each supported file type
+export var fileFormats = new Map() // save the SKU and price columns for each supported file type
 
 // Price Override
 let overridesCount = 0; // counter to tell when overrides are empty for display
+fileFormats.set('B&M Singles', {"skuCol":1, "priceCol": 6})//push default values for B&M file structure
 
 const overrideNode = document.getElementById("overridePrice");
 overrideNode.addEventListener("keyup", function(event) { // detect enter key
@@ -116,8 +117,6 @@ document.getElementById("overrideCode").addEventListener("keyup", function(event
         document.getElementById("overridePrice").focus();
     }
 });
-
-
 
 
 
@@ -343,9 +342,26 @@ document.getElementById("closeFormat").addEventListener('click', function(){
     let sidebar = document.getElementById("sidebar");
     let popup = document.getElementById("formatPopup");
 
+    let BM_setSKU = document.getElementById("BM_setSKU")
+    let BM_setPrice = document.getElementById("BM_setPrice")
+
+
+    if(fileFormats.has('B&M Singles')){
+        fileFormats.delete('B&M Singles');
+    }
+
+    fileFormats.set('B&M Singles', {"skuCol":BM_setSKU.value, "priceCol": BM_setPrice.value})
+
+    const obj = Object.fromEntries(fileFormats);
+    const jsonString = JSON.stringify(obj);
+    console.log(jsonString);
 
     content.style.opacity = "100%"
     sidebar.style.opacity = "100%"
     popup.style.display = "none"
+
+
+
+
 
 })

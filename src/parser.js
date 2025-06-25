@@ -3,6 +3,7 @@ import { tagsArr } from './uiDriver.js';
 import { overridesArr } from './uiDriver.js';
 import { fileObjList } from './uiDriver.js';
 import { saveAs } from 'https://cdn.skypack.dev/file-saver';
+import { fileFormats } from './uiDriver.js';
 
 const existingData = new Map(); // map for all existing data from the shopify export file [used for finding the custom diff for each finish]
 const BM_map = new Map(); 
@@ -38,7 +39,7 @@ document.getElementById("createFile").addEventListener('click', async function()
         switch (filePairings[i].type){
             case "B&M Singles":
                 console.log("B&M TRIGGERED")
-                await parseBM(filePairings[i].file, 1, 6);
+                await parseBM(filePairings[i].file, fileFormats.get('B&M Singles').skuCol, fileFormats.get('B&M Singles').priceCol);//use the fileformat map from UI driver to get any possible override of the default file formats
                 writeFile(masterFile, commandMode, BM_map)
                 break;
         }
@@ -76,7 +77,14 @@ async function parseBM(file, skuCol, priceCol){
                 let lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
                 let code = SKU.slice(lastIndex);
                 let prefix = SKU.slice(0,lastIndex);
-                let price = row.values[priceCol].result
+                let price = null
+
+                if(typeof(row.values[priceCol]) == 'object'){
+                    price = row.values[priceCol].result
+
+                } else{
+                    price = row.values[priceCol]
+                }
                 
 
                 SKU = replaceCode(prefix, code);
@@ -249,9 +257,9 @@ async function handleExistingData(file){
                 
         })
             // debug print in JSON format
-            const obj = Object.fromEntries(existingData);
-            const jsonString = JSON.stringify(obj);
-            console.log(jsonString);
+            // const obj = Object.fromEntries(existingData);
+            // const jsonString = JSON.stringify(obj);
+            // console.log(jsonString);
         })
 
 }
