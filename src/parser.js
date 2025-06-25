@@ -90,12 +90,18 @@ async function parseBM(file, skuCol, priceCol){
                 SKU = replaceCode(prefix, code);
                 SKU = "BM-".concat(SKU);
                 
+            
                 //override the price value for any manual override items requested by the user
-                for(let i = 0 ; i<overridesArr.length; i++){
-                    if(SKU == overridesArr[i].code){
-                        price = parseInt(overridesArr[i].price);
-                        console.log("price for "+ SKU + " was overrided to "+ price)
-                    }
+                // for(let i = 0 ; i<overridesArr.length; i++){
+                //     if(SKU == overridesArr[i].code){
+                //         price = parseInt(overridesArr[i].price);
+                //         console.log("price for "+ SKU + " was overrided to "+ price)
+                //     }
+                // }
+                
+                if (overridesArr.has(SKU)){
+                    price = parseInt(overridesArr.get(SKU))
+                    console.log("price for "+ SKU + " was overrided to "+ price)
                 }
                 
                 //required to get the proper postfix (ie. C3NL <- PB)
@@ -334,6 +340,11 @@ async function writeFile(file, mode, map){
                     if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){ // if the code is one of the custom finishes, then set the price to the C3NL price plus the pre-calculated diff
                         //console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
                         price = newPrice + (existingData.get(prefix).diff)
+                        console.log("searching for override on " + SKU)
+                        if (overridesArr.has(SKU)){
+                            price = parseInt(overridesArr.get(SKU))
+                            console.log("price for "+ SKU + " was overrided to "+ price)
+                        }
                     }
                     downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet   
                 }

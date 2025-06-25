@@ -2,7 +2,7 @@ import ExcelJS from 'https://cdn.jsdelivr.net/npm/exceljs/+esm';
 
 // Arrays to store bulk update tags and price overrides
 export var tagsArr = [] // array of strings (tags)
-export var overridesArr =[] // array of objects ({code:"code", price:"price"})
+export var overridesArr = new Map () // map of overrides matching the sku to the override price
 export var fileObjList = [] // array of each file object
 export var fileFormats = new Map() // save the SKU and price columns for each supported file type
 
@@ -19,8 +19,9 @@ overrideNode.addEventListener("keyup", function(event) { // detect enter key
 
         if(code != "" && price != ""){ // Only work if there is content in the inputs
 
-            let overrideObj = {"code": code, "price": price} //create object based on inputs
-            overridesArr.push(overrideObj) //push object to array
+            //let overrideObj = {"code": code, "price": price} //create object based on inputs
+            //overridesArr.push(overrideObj) //push object to array
+            overridesArr.set(code, price)
 
             //create the div and text for the override
             var newText = document.createTextNode(code + "____$" + price);
@@ -37,8 +38,9 @@ overrideNode.addEventListener("keyup", function(event) { // detect enter key
             //create the delete logic for the delete button
             deleteBtn.addEventListener('click', () => {
 
-                let index = overridesArr.indexOf(overrideObj);
-                overridesArr.splice(index, 1)
+                // let index = overridesArr.indexOf(overrideObj);
+                // overridesArr.splice(index, 1)
+                overridesArr.delete(overrideObj)
                 
                 newElement.remove();
                 overridesCount--
@@ -70,8 +72,10 @@ document.getElementById("overrideBtn").addEventListener('click', function(){
 
     if(code != "" && price != ""){ // Only work if there is content in the inputs
 
-        let overrideObj = {"code": code, "price": price} //create object based on inputs
-        overridesArr.push(overrideObj) //push object to array
+        //let overrideObj = {"code": code, "price": price} //create object based on inputs
+        //overridesArr.push(overrideObj) //push object to array
+        overridesArr.set(code, price)
+
 
         //create the div and text for the override
         var newText = document.createTextNode(code + "____$" + price);
@@ -88,8 +92,9 @@ document.getElementById("overrideBtn").addEventListener('click', function(){
         //create the delete logic for the delete button
         deleteBtn.addEventListener('click', () => {
 
-            let index = overridesArr.indexOf(overrideObj);
-            overridesArr.splice(index, 1)
+            // let index = overridesArr.indexOf(overrideObj);
+            // overridesArr.splice(index, 1)
+            overridesArr.delete(overrideObj)
 
             newElement.remove();
             overridesCount--
