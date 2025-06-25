@@ -154,7 +154,6 @@ function replaceCode(SKU, code){
 
 }
 
-
 function arrToStr(array){
     return array.join(",");
 }
@@ -187,52 +186,63 @@ async function handleExistingData(file){
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(buffer);
 
-    //========= FUTURE EDITS==========//
-    let skuCol = 32;
-    let priceCol = 37;
-
+    let skuCol = null //32;
+    let priceCol = null//37;
 
     workbook.eachSheet((worksheet) => {
         worksheet.eachRow((row, rowNumber) => {
+            if(rowNumber == 1){
+               for(let i = 0; i<row.values.length; i++){
+                if(row.values[i] == "Variant SKU"){
+                    skuCol = i;
+                    console.log('SKU COL SET TO '+ skuCol)
+                }
+                if(row.values[i] == "Variant Price"){
+                    priceCol = i;
+                    console.log('PRice COL SET TO '+ priceCol)
+                }
+               }
+            }else{
 
-            let SKU = row.values[skuCol]
-            let price = row.values[priceCol]
-            let lastIndex = null;
-            let code = null;
-            let prefix = null;
+                let SKU = row.values[skuCol]
+                let price = row.values[priceCol]
+                let lastIndex = null;
+                let code = null;
+                let prefix = null;
 
-            //catch non-SKU entries
-            if (!SKU || typeof SKU !== 'string'){
-                console.log("ERROR SKU CAUGHT" + SKU)
-            } else{
-                lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
-                code = SKU.slice(lastIndex);
-                prefix = SKU.slice(0,lastIndex);
-                SKU = replaceCode(prefix, code);
-           
-                if(existingData.has(prefix) == false){ // if the prefix (ie the SKU) does not exist then create the first entry
-                    if(code == "-C3NL"){
-                        existingData.set(prefix, {'C3NL': price, 'C7NL': 0, 'diff': 0})
+                //catch non-SKU entries
+                if (!SKU || typeof SKU !== 'string'){
+                    console.log("ERROR SKU CAUGHT" + SKU)
+                } else{
+                    lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
+                    code = SKU.slice(lastIndex);
+                    prefix = SKU.slice(0,lastIndex);
+                    SKU = replaceCode(prefix, code);
+            
+                    if(existingData.has(prefix) == false){ // if the prefix (ie the SKU) does not exist then create the first entry
+                        if(code == "-C3NL"){
+                            existingData.set(prefix, {'C3NL': price, 'C7NL': 0, 'diff': 0})
+                        }
+                        if(code == "-C7NL"){
+                            existingData.set(prefix, {'C3NL': 0, 'C7NL': price, 'diff': 0})
+                        } 
+                    }else{ // if the prefix exists then update the other value and the diff
+                        if(code == "-C3NL"){
+                            existingData.get(prefix).C3NL = price;
+                            let high = existingData.get(prefix).C7NL;
+                            let low = existingData.get(prefix).C3NL;
+                    
+                            existingData.get(prefix).diff = high-low;
+                                
+                        }
+                        if(code == "-C7NL"){
+                            existingData.get(prefix).C7NL = price;
+                            let high = existingData.get(prefix).C7NL;
+                            let low = existingData.get(prefix).C3NL;
+                    
+                            existingData.get(prefix).diff = high-low;
+                        } 
                     }
-                    if(code == "-C7NL"){
-                        existingData.set(prefix, {'C3NL': 0, 'C7NL': price, 'diff': 0})
-                    } 
-                }else{ // if the prefix exists then update the other value and the diff
-                    if(code == "-C3NL"){
-                        existingData.get(prefix).C3NL = price;
-                        let high = existingData.get(prefix).C7NL;
-                        let low = existingData.get(prefix).C3NL;
-                
-                        existingData.get(prefix).diff = high-low;
-                            
-                    }
-                    if(code == "-C7NL"){
-                        existingData.get(prefix).C7NL = price;
-                        let high = existingData.get(prefix).C7NL;
-                        let low = existingData.get(prefix).C3NL;
-                
-                        existingData.get(prefix).diff = high-low;
-                    } 
                 }
 
             }
@@ -269,47 +279,56 @@ async function writeFile(file, mode, map){
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(buffer);
 
-    // ========= Future Edits ========== // 
-    let skuCol = 32;
-    let priceCol = 37;
-
-    console.log("DATA LOOP ENTERED")
+    let skuCol = null //32;
+    let priceCol = null //37;
 
     workbook.eachSheet((worksheet) => {
         worksheet.eachRow((row, rowNumber) => {
+            if(rowNumber == 1){
+               for(let i = 0; i<row.values.length; i++){
+                if(row.values[i] == "Variant SKU"){
+                    skuCol = i;
+                    console.log('SKU COL SET TO '+ skuCol)
+                }
+                if(row.values[i] == "Variant Price"){
+                    priceCol = i;
+                    console.log('PRice COL SET TO '+ priceCol)
+                }
+               }
+            }else{
 
-            let SKU = row.values[skuCol]
-            let price = row.values[priceCol]
-            let lastIndex = null;
-            let code = null;
-            let prefix = null;
-            let newPrice = null;
+                let SKU = row.values[skuCol]
+                let price = row.values[priceCol]
+                let lastIndex = null;
+                let code = null;
+                let prefix = null;
+                let newPrice = null;
 
-            if(SKU != undefined){ // if the sku is valid continue
+                if(SKU != undefined){ // if the sku is valid continue
 
-                lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
-                code = SKU.slice(lastIndex);
-                prefix = SKU.slice(0,lastIndex);
-                SKU = replaceCode(prefix, code);
+                    lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
+                    code = SKU.slice(lastIndex);
+                    prefix = SKU.slice(0,lastIndex);
+                    SKU = replaceCode(prefix, code);
 
-                //console.log("SKU SEARCH:" + SKU)
-                console.log("PRE SEARCH:" + map.get(prefix))
+                    //console.log("SKU SEARCH:" + SKU)
+                    //console.log("PRE SEARCH:" + map.get(prefix))
 
 
-                if(map.get(prefix) != undefined){ // try to find the corresponding item in the good price map 
-                    for(let i = 0; i< map.get(prefix).info.length; i++){
-                        if(map.get(prefix).info[i].code == "C3NL"){ // identify the base price using C3NL
-                            newPrice = map.get(prefix).info[i].price // set the newPrice to the C3NL price
+                    if(map.get(prefix) != undefined){ // try to find the corresponding item in the good price map 
+                        for(let i = 0; i< map.get(prefix).info.length; i++){
+                            if(map.get(prefix).info[i].code == "C3NL"){ // identify the base price using C3NL
+                                newPrice = map.get(prefix).info[i].price // set the newPrice to the C3NL price
+                            }
                         }
                     }
+                    // if the current item being processed is a custom variant then take the C3NL price stored in newPrice and add the diff for this item before saving
+                    if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){ // if the code is one of the custom finishes, then set the price to the C3NL price plus the pre-calculated diff
+                        //console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
+                        price = newPrice + (existingData.get(prefix).diff)
+                    }
+                    downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet   
                 }
-                // if the current item being processed is a custom variant then take the C3NL price stored in newPrice and add the diff for this item before saving
-                if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){ // if the code is one of the custom finishes, then set the price to the C3NL price plus the pre-calculated diff
-                    console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
-                    price = newPrice + (existingData.get(prefix).diff)
-                }
-
-                downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet   
             }
         })
     })
@@ -318,11 +337,10 @@ async function writeFile(file, mode, map){
 
     //trigger download logic 
     downloadWorkbook.xlsx.writeBuffer().then((buffer) => { //convert buffer to blob and trigger download
-          const blob = new Blob([buffer], {
-            type:
-              'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-          });
-        
+            const blob = new Blob([buffer], {
+                type:
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            });
           saveAs(blob, 'test.xlsx'); // Trigger download
         });
 }
