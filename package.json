@@ -1,5 +1,5 @@
 {
-  "name": "tds-matrixify-parser",
+  "name": "SheetForge",
   "version": "1.0.0",
   "description": "Parser for matrixify",
   "main": "main.js",
@@ -22,6 +22,7 @@
   "devDependencies": {
     "@electron-forge/cli": "^7.8.1",
     "@electron-forge/maker-deb": "^7.8.1",
+    "@electron-forge/maker-dmg": "^7.8.1",
     "@electron-forge/maker-rpm": "^7.8.1",
     "@electron-forge/maker-squirrel": "^7.8.1",
     "@electron-forge/maker-zip": "^7.8.1",
@@ -30,6 +31,7 @@
     "@electron/fuses": "^1.8.0",
     "autoprefixer": "^10.4.21",
     "electron": "^36.4.0",
+    "electron-packager": "^17.1.2",
     "postcss": "^8.5.5",
     "tailwindcss": "^4.1.10"
   },

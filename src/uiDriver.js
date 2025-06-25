@@ -349,5 +349,3 @@ document.getElementById("closeFormat").addEventListener('click', function(){
     popup.style.display = "none"
 
 })
-
-alert("APPDATA FOLDER"  + app.getPath(appData))
