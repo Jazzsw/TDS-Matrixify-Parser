@@ -194,6 +194,16 @@ async function handleExistingData(file){
 
     workbook.eachSheet((worksheet) => {
         worksheet.eachRow((row, rowNumber) => {
+            if(rowNumber == 1){
+                for(let i=0; i<row.length; i++){
+                    if(row[i]=="Variant SKU"){
+                        skuCol = i;
+                    }
+                    if(row[i]=="Variant Price"){
+                        priceCol = i;
+                    }
+                }
+            }
 
             let SKU = row.values[skuCol]
             let price = row.values[priceCol]

@@ -256,6 +256,9 @@ dropZone.addEventListener('change', async (event) => {
     let filename = file.name
     let parent = document.getElementById("filesWrapper")
 
+    //console.log(filename)
+    console.log(fileObjList)
+
     let newContainer = document.createElement("div")
     let newText = document.createTextNode(filename)
     let emptyText = document.getElementById("filesEmptyText")
@@ -283,6 +286,7 @@ dropZone.addEventListener('change', async (event) => {
 
         let index = fileObjList.indexOf(file);
         fileObjList.splice(index, 1)
+        console.log(fileObjList)
 
         filesCount--;
         if(filesCount == 0){
