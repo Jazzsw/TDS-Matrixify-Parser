@@ -1,7 +1,7 @@
 {
   "name": "SheetForge",
-  "version": "1.0.0",
-  "description": "Parser for matrixify",
+  "version": "1.0.3",
+  "description": "Parser for Matrixify",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
