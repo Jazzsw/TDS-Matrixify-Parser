@@ -1,6 +1,6 @@
 import ExcelJS from 'https://cdn.jsdelivr.net/npm/exceljs/+esm';
 import { tagsArr } from './uiDriver.js';
-import { overridesArr } from './uiDriver.js';
+import { overridesMap } from './uiDriver.js';
 import { fileObjList } from './uiDriver.js';
 import { saveAs } from 'https://cdn.skypack.dev/file-saver';
 import { fileFormats } from './uiDriver.js';
@@ -9,6 +9,17 @@ const existingData = new Map(); // map for all existing data from the shopify ex
 const BM_map = new Map(); 
 var masterFile = null; //a file object that gets assigned to the file with all the shopify info [used to loop through to find all the custom available finishes]
 let undefinedCount = 0;
+
+
+const codeMap = {
+    "-PB": "-C3NL",
+    "-OB": "-C10BNL",
+    "-AB": "-C5NL",
+    "-SB": "-C4NL",
+    "-PN": "-C14",
+    "-BN": "-C15",
+    "-PL": "-C3",
+};
 
 
 document.getElementById("createFile").addEventListener('click', async function(){
@@ -76,11 +87,18 @@ async function parseBM(file, skuCol, priceCol){
         //excelJS overhead to load a file
         const buffer = await file.arrayBuffer();
         const workbook = new ExcelJS.Workbook();
-        await workbook.xlsx.load(buffer);
+
+        try{
+            await workbook.xlsx.load(buffer);
+        }catch(e){
+            alert("ERROR: It appears the file that you are trying to upload is not a .xlsx file");
+            return;
+        }
 
         //loop for each sheet and then each row of each sheet
         workbook.eachSheet((worksheet) => {
             worksheet.eachRow((row, rowNumber) => {
+
                 let SKU = row.values[skuCol] // find SKU
                 let lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
                 let code = SKU.slice(lastIndex);
@@ -89,47 +107,46 @@ async function parseBM(file, skuCol, priceCol){
 
                 if(typeof(row.values[priceCol]) == 'object'){
                     price = row.values[priceCol].result
-
                 } else{
                     price = row.values[priceCol]
                 }
-                
+                    
 
                 SKU = replaceCode(prefix, code);
                 SKU = "BM-".concat(SKU);
+                    
                 
-            
-                //override the price value for any manual override items requested by the user
-                // for(let i = 0 ; i<overridesArr.length; i++){
-                //     if(SKU == overridesArr[i].code){
-                //         price = parseInt(overridesArr[i].price);
-                //         console.log("price for "+ SKU + " was overrided to "+ price)
-                //     }
-                // }
-                
-                if (overridesArr.has(SKU)){
-                    price = parseInt(overridesArr.get(SKU))
+                    //override the price value for any manual override items requested by the user
+                    // for(let i = 0 ; i<overridesMap.length; i++){
+                    //     if(SKU == overridesMap[i].code){
+                    //         price = parseInt(overridesMap[i].price);
+                    //         console.log("price for "+ SKU + " was overrided to "+ price)
+                    //     }
+                    // }
+                    
+                if (overridesMap.has(SKU)){
+                    price = parseInt(overridesMap.get(SKU))
                     console.log("price for "+ SKU + " was overrided to "+ price)
                 }
-                
+                    
                 //required to get the proper postfix (ie. C3NL <- PB)
                 let goodCode = SKU.slice(SKU.lastIndexOf("-")+1)
                 let goodPrefix = "BM-".concat(prefix)
 
                 if(BM_map.has(goodPrefix)){ // if the prefix exists then simply push a variation code to the info array
                     BM_map.get(goodPrefix).info.push({'code': goodCode, 'price': price})
-                }
-                else{ // if the prefix does not exist then create a new object in the Map
+                } else{ // if the prefix does not exist then create a new object in the Map
                     BM_map.set(goodPrefix, {'info': [{'code': goodCode, 'price': price}]});
                 }
+                
             });
 
         })
 
         //debug printing the object in JSON format
-        const obj = Object.fromEntries(BM_map);
-        const jsonString = JSON.stringify(obj); 
-        console.log(jsonString);
+        // const obj = Object.fromEntries(BM_map);
+        // const jsonString = JSON.stringify(obj); 
+        // console.log(jsonString);
 
         return 1;
 }
@@ -142,37 +159,26 @@ async function parseBM(file, skuCol, priceCol){
  * @summary takes an SKU and code and converts it if possible, if not returns what it was given in a single string  
 */
 function replaceCode(SKU, code){
-    switch(code){
-        case "-PB":
-            return SKU.concat("-C3NL");
-            break;
-        case "-OB":
-            return SKU.concat("-C10BNL");
-            break;
-        case "-AB":
-            return SKU.concat("-C5NL");
-            break;
-        case "-SB":
-            return SKU.concat("-C4NL");
-            break;
-        case "-PN":
-            return SKU.concat("-C14");
-            break;
-        case "-BN":
-            return SKU.concat("-C15");
-            break;
-        case "-PL":
-            return SKU.concat("-C3");
-            break;
-        default:
-            if(code[0] != "-"){
-                return SKU;
-            }
-            else{
-                console.log("%c SKU NOT CONVERTED " + SKU.concat(code), "color: red; font-weight: bold;");
-                return SKU.concat(code)
-            }
+    if (typeof SKU !== "string" || typeof code !== "string") {
+        alert("Invalid input to replaceCode:", { SKU, code });
+        return SKU;
     }
+    const convertedCode = codeMap[code];
+
+    if (convertedCode) {
+        return SKU.concat(convertedCode);
+    } else if (!code.startsWith("-")) {
+        // Not a finish code, just return the base SKU
+        return SKU;
+    } else {
+        // Unknown code – log it for debugging
+        console.log(
+            `%c SKU NOT CONVERTED ${SKU.concat(code)}`,
+            "color: red; font-weight: bold;"
+        );
+        return SKU.concat(code);
+    }
+    
 
 }
 
@@ -208,7 +214,13 @@ async function handleExistingData(file){
 
     const buffer = await file.arrayBuffer();
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(buffer);
+
+    try{
+        await workbook.xlsx.load(buffer);
+    }catch(e){
+        alert("ERROR: It appears the file that you are trying to upload is not a .xlsx file");
+        return;
+    }
 
     let skuCol = null //32;
     let priceCol = null//37;
@@ -302,7 +314,14 @@ async function writeFile(file, mode, map){
 
     const buffer = await file.arrayBuffer();
     const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.load(buffer);
+
+
+    try{
+        await workbook.xlsx.load(buffer);
+    }catch(e){
+        alert("ERROR: It appears the file that you are trying to upload is not a .xlsx file");
+        return;
+    }
 
     let skuCol = null //32;
     let priceCol = null //37;
@@ -311,15 +330,21 @@ async function writeFile(file, mode, map){
         worksheet.eachRow((row, rowNumber) => {
             if(rowNumber == 1){
                for(let i = 0; i<row.values.length; i++){
-                if(row.values[i] == "Variant SKU"){
-                    skuCol = i;
-                    console.log('SKU COL SET TO '+ skuCol)
+                    if(row.values[i] == "Variant SKU"){
+                        skuCol = i;
+                        console.log('SKU COL SET TO '+ skuCol)
+                    }
+                    if(row.values[i] == "Variant Price"){
+                        priceCol = i;
+                        console.log('Price COL SET TO '+ priceCol)
+                    }
                 }
-                if(row.values[i] == "Variant Price"){
-                    priceCol = i;
-                    console.log('Price COL SET TO '+ priceCol)
+
+                if (!skuCol || !priceCol) {
+                    alert("Required headers not found. Ensure 'Variant SKU' and 'Variant Price' exist within the Shopify export file");
+                    return;
                 }
-               }
+
             }else{
 
                 let SKU = row.values[skuCol]
@@ -351,9 +376,8 @@ async function writeFile(file, mode, map){
                     if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){ // if the code is one of the custom finishes, then set the price to the C3NL price plus the pre-calculated diff
                         //console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
                         price = newPrice + (existingData.get(prefix).diff)
-                        console.log("searching for override on " + SKU)
-                        if (overridesArr.has(SKU)){
-                            price = parseInt(overridesArr.get(SKU))
+                        if (overridesMap.has(SKU)){
+                            price = parseInt(overridesMap.get(SKU))
                             console.log("price for "+ SKU + " was overrided to "+ price)
                         }
                     }
