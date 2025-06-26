@@ -37,18 +37,12 @@ document.getElementById("createFile").addEventListener('click', async function()
     //First we must isolate and remove the current shopify data so we can find the custom finish cost diff for each item 
     for(let i = 0; i<filePairings.length; i++){  
         if(filePairings[i].type == "Current Shopify Data"){
-            await handleExistingData(filePairings[i].file); //this function populates the existingData Map
+            //=====await handleExistingData(filePairings[i].file); //this function populates the existingData Map
             masterFile = filePairings[i].file // set the master file to the file marked Current Shopify Data
-            filePairings.splice(i,1)
+            //====filePairings.splice(i,1)
         }
     }
 
-    if(undefinedCount > 10){
-        alert("Warning: More than 10 undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met")
-        undefinedCount = 0;
-    }
-
-    console.log("DATA HAS BEEN MAPPED")
 
 
     //Loop through the files and process them based on their dropdown classification 
@@ -56,6 +50,11 @@ document.getElementById("createFile").addEventListener('click', async function()
         switch (filePairings[i].type){
             case "B&M Singles":
                 console.log("B&M TRIGGERED")
+                await handleExistingData(masterFile);
+                if(undefinedCount > 10){
+                    alert("Warning: The program identified [" +undefinedCount+ "] undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met")
+                    undefinedCount = 0;
+                }
                 await parseBM(filePairings[i].file, fileFormats.get('B&M Singles').skuCol, fileFormats.get('B&M Singles').priceCol);//use the fileformat map from UI driver to get any possible override of the default file formats
                 writeFile(masterFile, commandMode, BM_map)
                 break;
@@ -296,11 +295,10 @@ async function writeFile(file, mode, map){
     const buffer = await file.arrayBuffer();
     const workbook = new ExcelJS.Workbook();
 
-
     try{
         await workbook.xlsx.load(buffer);
     }catch(e){
-        alert("ERROR: It appears the file that you are trying to upload is not a .xlsx file");
+        alert("ERROR: Write file failed.");
         return;
     }
 
