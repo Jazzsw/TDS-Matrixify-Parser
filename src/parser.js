@@ -20,6 +20,18 @@ const codeMap = {
     "-PL": "-C3",
 };
 
+const downloadWorkbook = new ExcelJS.Workbook();
+
+const downloadSheet = downloadWorkbook.addWorksheet('Products');
+
+downloadSheet.columns = [ // create the columns for the Matrixify file, these header names are very specific, see Matrixify docs for more info
+    { header: 'Variant SKU', key: 'sku', width: 30 },
+    { header: 'Variant Price', key: 'price', width: 10 },
+    { header: 'Command', key: 'command', width: 10},
+    { header: 'Tags', key: 'tags', width: 10},
+    { header: 'Tags Command', key: 'tagscommand', width: 15}
+];
+
 document.getElementById("createFile").addEventListener('click', async function(){
 
     let commandMode = document.getElementById("commandSelect").value
@@ -56,11 +68,16 @@ document.getElementById("createFile").addEventListener('click', async function()
                     undefinedCount = 0;
                 }
                 await parseBM(filePairings[i].file, fileFormats.get('B&M Singles').skuCol, fileFormats.get('B&M Singles').priceCol);//use the fileformat map from UI driver to get any possible override of the default file formats
-                writeFile(masterFile, commandMode, BM_map)
+                await writeFile(masterFile, commandMode, BM_map)
+                break;
+            
+            case "Reggio":
+                await parseReg(filePairings[i].file, 2, 13, 6, commandMode);
                 break;
         }
 
     }
+    downloadFile(); //trigger the download of the file
 
 })
 
@@ -282,16 +299,6 @@ async function handleExistingData(file){
 
 async function writeFile(file, mode, map){
 
-    const downloadWorkbook = new ExcelJS.Workbook();
-    const downloadSheet = downloadWorkbook.addWorksheet('Products');
-    downloadSheet.columns = [ // create the columns for the Matrixify file, these header names are very specific, see Matrixify docs for more info
-        { header: 'Variant SKU', key: 'sku', width: 30 },
-        { header: 'Variant Price', key: 'price', width: 10 },
-        { header: 'Command', key: 'command', width: 10},
-        { header: 'Tags', key: 'tags', width: 10},
-        { header: 'Tags Command', key: 'tagscommand', width: 15}
-    ];
-
     const buffer = await file.arrayBuffer();
     const workbook = new ExcelJS.Workbook();
 
@@ -369,6 +376,59 @@ async function writeFile(file, mode, map){
     undefinedCount = 0;
 
     //trigger download logic 
+    // downloadWorkbook.xlsx.writeBuffer().then((buffer) => { //convert buffer to blob and trigger download
+    //         const blob = new Blob([buffer], {
+    //             type:
+    //                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    //         });
+    //       saveAs(blob, 'test.xlsx'); // Trigger download
+    //     });
+}
+
+async function parseReg(file, skuCol, priceCol, matCol, mode){
+    const buffer = await file.arrayBuffer();
+    const workbook = new ExcelJS.Workbook();
+
+    try{
+        await workbook.xlsx.load(buffer);
+    }catch(e){
+        alert("ERROR: It appears the file that you are trying to upload is not a .xlsx file");
+        return;
+    }
+
+    workbook.eachSheet((worksheet) => {
+        if(worksheet.name == "Master Sheet"){
+            worksheet.eachRow((row, rowNumber) => {
+                let price = Math.round(row.values[priceCol].result) ?? row.values[priceCol]; // handle the case where price is an object with a result property
+                let sku = row.values[skuCol].result ?? row.values[skuCol]; // handle the case where sku is an object with a result property
+                
+                if(typeof sku !== 'string'){
+                    sku = sku.toString(); // convert to string if not already
+                }
+
+                if(row.values[matCol] == "ALUMINUM"){
+                    console.log("ALUMINUM SKU: " + sku);
+                    sku = sku.concat("A");
+                }else if(row.values[matCol] == "STEEL"){
+                    console.log("STEEL SKU: " + sku);
+                    sku = sku.concat("S");
+                }
+                //============FIGURE OUT BL FINISH CODE ================//
+
+                if(!isNaN(price)){
+                    console.log(" SKU Value: " + sku + " Price Value: " + price);
+                    downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet   
+                }
+            })
+        }
+    })
+
+
+}
+
+
+
+function downloadFile(){
     downloadWorkbook.xlsx.writeBuffer().then((buffer) => { //convert buffer to blob and trigger download
             const blob = new Blob([buffer], {
                 type:
