@@ -340,7 +340,6 @@ document.getElementById("formatInfo").addEventListener('click', function(){
     content.style.opacity = "10%"
     sidebar.style.opacity = "10%"
     document.getElementById("formatPopup").style.display = "block"
-
     
 })
 
@@ -360,6 +359,7 @@ document.getElementById("closeFormat").addEventListener('click', function(){
 
     fileFormats.set('B&M Singles', {"skuCol":BM_setSKU.value, "priceCol": BM_setPrice.value})
 
+    // Loop through custom formats and add them to the fileFormats map
     for(const [key, val] of customFormats){
         let sku = val.skuInput.value
         let price = val.priceInput.value
@@ -368,12 +368,10 @@ document.getElementById("closeFormat").addEventListener('click', function(){
         options.push(key)
     }
     
-
+    //debug print for the list of file formats that will be sent to the parser
     const obj = Object.fromEntries(fileFormats);
     const jsonString = JSON.stringify(obj);
     console.log(jsonString);
-
-
 
     content.style.opacity = "100%"
     sidebar.style.opacity = "100%"
@@ -414,7 +412,7 @@ document.getElementById("addCustomFormat").addEventListener('click', function(){
     skuText.className = "textNode"
     priceText.className = "textNode"
 
-    delP.addEventListener('click', function(){
+    delP.addEventListener('click', function(){//delete logic for the custom format
         parentDiv.remove()
     })
 
@@ -426,9 +424,8 @@ document.getElementById("addCustomFormat").addEventListener('click', function(){
 
     document.getElementById("formatContainer").appendChild(parentDiv)
 
+    numberOfFormats++//insures unique key for the custom format
 
-    numberOfFormats++
-
-    customFormats.set(("custom_"+numberOfFormats), {"skuInput":skuInput, "priceInput": priceInput} )
+    customFormats.set(("custom_"+numberOfFormats), {"skuInput":skuInput, "priceInput": priceInput})// add the inputs to the customFormats map so they can be accessed later
 
 })
