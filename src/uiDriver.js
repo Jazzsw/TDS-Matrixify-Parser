@@ -268,7 +268,7 @@ dropZone.addEventListener('change', async (event) => {
     let newDropdown = document.createElement("select");
     newDropdown.className = "filetypeDropdown"
         
-    let options = ["Current Shopify Data","B&M Singles", "B&M Interior Sets"] //array of dropdown options (scales with the number of file types to be used)
+    let options = ["Current Shopify Data","B&M Singles", "B&M Interior Sets"] //array of dropdown options
     for (let i=0; i<options.length; i++){//create an option element and append it for each array element 
         let newOption = document.createElement("option");
         newOption.text = options[i]
@@ -364,9 +364,5 @@ document.getElementById("closeFormat").addEventListener('click', function(){
     content.style.opacity = "100%"
     sidebar.style.opacity = "100%"
     popup.style.display = "none"
-
-
-
-
 
 })

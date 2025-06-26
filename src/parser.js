@@ -8,6 +8,8 @@ import { fileFormats } from './uiDriver.js';
 const existingData = new Map(); // map for all existing data from the shopify export file [used for finding the custom diff for each finish]
 const BM_map = new Map(); 
 var masterFile = null; //a file object that gets assigned to the file with all the shopify info [used to loop through to find all the custom available finishes]
+let undefinedCount = 0;
+
 
 document.getElementById("createFile").addEventListener('click', async function(){
 
@@ -32,7 +34,13 @@ document.getElementById("createFile").addEventListener('click', async function()
         }
     }
 
+    if(undefinedCount > 10){
+        alert("Warning: More than 10 undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met")
+        undefinedCount = 0;
+    }
+
     console.log("DATA HAS BEEN MAPPED")
+
 
     //Loop through the files and process them based on their dropdown classification 
     for (let i = 0; i<filePairings.length; i++){
@@ -194,6 +202,8 @@ function arrToStr(array){
  * price diff for each item. It stores this data in the "existingData" map. 
  */
 
+
+
 async function handleExistingData(file){
 
     const buffer = await file.arrayBuffer();
@@ -226,7 +236,8 @@ async function handleExistingData(file){
 
                 //catch non-SKU entries
                 if (!SKU || typeof SKU !== 'string'){
-                    console.log("ERROR SKU CAUGHT" + SKU)
+                    undefinedCount++;
+                    console.log("ERROR SKU CAUGHT " + SKU)
                 } else{
                     lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
                     code = SKU.slice(lastIndex);
@@ -306,7 +317,7 @@ async function writeFile(file, mode, map){
                 }
                 if(row.values[i] == "Variant Price"){
                     priceCol = i;
-                    console.log('PRice COL SET TO '+ priceCol)
+                    console.log('Price COL SET TO '+ priceCol)
                 }
                }
             }else{
@@ -353,6 +364,7 @@ async function writeFile(file, mode, map){
     })
 
     console.log("WRITE COMPLETE")
+    undefinedCount = 0;
 
     //trigger download logic 
     downloadWorkbook.xlsx.writeBuffer().then((buffer) => { //convert buffer to blob and trigger download
