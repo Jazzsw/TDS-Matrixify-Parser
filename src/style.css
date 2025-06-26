@@ -318,17 +318,3 @@ input[type="file"] {
     margin: 2vh;
     text-align: center;
 }
-
-
-#app-icon {
-     width: 32px; /* Adjust as needed */
-     height: 32px; /* Adjust as needed */
-     border-radius: 25%;
-     overflow: hidden; /* Hides any overflow from the rounded corners */
-   }
-
-   #app-icon img {
-     width: 100%;
-     height: 100%;
-     object-fit: cover; /* Ensures the icon fills the container */
-   }
