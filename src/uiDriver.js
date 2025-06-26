@@ -6,6 +6,10 @@ export var overridesMap = new Map () // map of overrides matching the sku to the
 export var fileObjList = [] // array of each file object
 export var fileFormats = new Map() // save the SKU and price columns for each supported file type
 
+let customFormats = new Map();
+let numberOfFormats = 0;
+let options = ["Current Shopify Data","B&M Singles", "B&M Interior Sets"] //array of dropdown options
+
 // Price Override
 let overridesCount = 0; // counter to tell when overrides are empty for display
 fileFormats.set('B&M Singles', {"skuCol":1, "priceCol": 6})//push default values for B&M file structure
@@ -268,7 +272,6 @@ dropZone.addEventListener('change', async (event) => {
     let newDropdown = document.createElement("select");
     newDropdown.className = "filetypeDropdown"
         
-    let options = ["Current Shopify Data","B&M Singles", "B&M Interior Sets"] //array of dropdown options
     for (let i=0; i<options.length; i++){//create an option element and append it for each array element 
         let newOption = document.createElement("option");
         newOption.text = options[i]
@@ -357,12 +360,75 @@ document.getElementById("closeFormat").addEventListener('click', function(){
 
     fileFormats.set('B&M Singles', {"skuCol":BM_setSKU.value, "priceCol": BM_setPrice.value})
 
+    for(const [key, val] of customFormats){
+        let sku = val.skuInput.value
+        let price = val.priceInput.value
+
+        fileFormats.set(key, {"skuCol":sku, "priceCol": price});
+        options.push(key)
+    }
+    
+
     const obj = Object.fromEntries(fileFormats);
     const jsonString = JSON.stringify(obj);
     console.log(jsonString);
 
+
+
     content.style.opacity = "100%"
     sidebar.style.opacity = "100%"
     popup.style.display = "none"
+
+})
+
+
+document.getElementById("addCustomFormat").addEventListener('click', function(){
+
+    let parentDiv = document.createElement("div")
+    let skuInput = document.createElement("input")
+    let priceInput = document.createElement("input")
+
+    parentDiv.className = "customFormat"
+
+    skuInput.type = "text"
+    priceInput.type = "text"
+
+    skuInput.placeholder = "SKU Column Value"
+    priceInput.placeholder = "Price Column Value"
+
+    skuInput.className = "formatInput"
+    priceInput.className = "formatInput"
+
+    let skuText = document.createElement("p");
+    skuText.appendChild(document.createTextNode("SKU Column"));
+    let priceText = document.createElement("p")
+    priceText.appendChild(document.createTextNode("Price Column"));
+
+
+    let delP = document.createElement("p");
+    let delText = document.createTextNode("Delete");
+
+    delP.appendChild(delText)
+    delP.className = "deleteOverride"
+
+    skuText.className = "textNode"
+    priceText.className = "textNode"
+
+    delP.addEventListener('click', function(){
+        parentDiv.remove()
+    })
+
+    parentDiv.appendChild(skuText)
+    parentDiv.appendChild(skuInput)
+    parentDiv.appendChild(priceText)
+    parentDiv.appendChild(priceInput)
+    parentDiv.appendChild(delP)
+
+    document.getElementById("formatContainer").appendChild(parentDiv)
+
+
+    numberOfFormats++
+
+    customFormats.set(("custom_"+numberOfFormats), {"skuInput":skuInput, "priceInput": priceInput} )
 
 })

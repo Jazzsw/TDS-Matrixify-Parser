@@ -107,11 +107,14 @@
     </div>
 
     <div id="formatPopup">
-        <div>
-            <p>B&M Singles</p>
+        <div id="formatContainer">
+            <h3>B&M Singles</h3>
             <div style="display: flex">
             <p>SKU Column</p><input type="text" value="1" class="formatInput" id="BM_setSKU"> <p>Price Column</p><input type="text" value="6" class="formatInput" id="BM_setPrice">
             </div>
+
+            
+            <h3>Custom File Formats</h3>
 
             <!-- <p>Current Shopify Data</p>
             <div style="display: flex">
@@ -119,6 +122,7 @@
             </div> -->
 
         </div>
+        <button id="addCustomFormat" class="sidebarBtn">Add Custom File Format</button>
 
         <button class="sidebarBtn" id="closeFormat">Save and Exit</button>
 
