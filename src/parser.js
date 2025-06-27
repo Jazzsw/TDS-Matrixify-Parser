@@ -429,11 +429,14 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
 
 
 function downloadFile(){
+
     downloadWorkbook.xlsx.writeBuffer().then((buffer) => { //convert buffer to blob and trigger download
             const blob = new Blob([buffer], {
                 type:
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             });
-          saveAs(blob, 'test.xlsx'); // Trigger download
+          saveAs(blob, 'SheetForge Export.xlsx'); // Trigger download
         });
+    
+    downloadWorkbook = new ExcelJS.Workbook(); // reset the workbook for the next download
 }
