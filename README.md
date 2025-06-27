@@ -35,3 +35,20 @@ that the program will fail if the files are not properly specified by the user.
 
 
 
+
+## ==================== File Requirements ==================== ##
+
+# B&M #
+When uploading B&M files, it should be noted that it is *Required* that a 
+Shopify Export file is also uploaded along with it. This is because B&M 
+files do not include the custom brass finishes that The Door Store offers.
+Thus to update all B&M items on the website, a Shopify Export file 
+is required to calculate the amount that is being charged for the custom
+finish, for each individual item.
+
+
+# Reggio #
+When uploading Reggio files it is important to note that *ONLY* the "Master Sheet"
+will be read. This is because the styling of the print and retail pricelist get in
+the way of the data processing. This also means that the sheet with the correct data
+*MUST* be named "Master Sheet". 

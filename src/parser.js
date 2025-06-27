@@ -397,7 +397,7 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
     }
 
     workbook.eachSheet((worksheet) => {
-        if(worksheet.name == "Master Sheet"){
+        if(worksheet.name.toLowerCase() == "master sheet"){
             worksheet.eachRow((row, rowNumber) => {
                 let price = Math.round(row.values[priceCol].result) ?? row.values[priceCol]; // handle the case where price is an object with a result property
                 let sku = row.values[skuCol].result ?? row.values[skuCol]; // handle the case where sku is an object with a result property

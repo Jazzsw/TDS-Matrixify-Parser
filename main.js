@@ -3,6 +3,10 @@ const { ipcMain } = require('electron');
 const electron = require('electron')
 const settings = require('electron-settings');
 
+if(require('electron-squirrel-startup')) {
+  app.quit();
+}
+
 //Simple window creation with browserWindow loading layout from index 
   const createWindow = () => {
   const win = new BrowserWindow({//define window size
