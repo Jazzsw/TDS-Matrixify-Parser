@@ -416,7 +416,7 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                 //============FIGURE OUT BL FINISH CODE ================//
 
                 if(!isNaN(price)){
-                    console.log(" SKU Value: " + sku + " Price Value: " + price);
+                    //console.log(" SKU Value: " + sku + " Price Value: " + price);
                     downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet   
                 }
             })

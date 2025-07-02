@@ -1,3 +1,4 @@
+//import { file } from 'electron-settings';
 import ExcelJS from 'https://cdn.jsdelivr.net/npm/exceljs/+esm';
 
 // Arrays to store bulk update tags and price overrides
@@ -13,6 +14,7 @@ let options = ["Current Shopify Data", "B&M Singles", "Reggio"] //array of dropd
 // Price Override
 let overridesCount = 0; // counter to tell when overrides are empty for display
 fileFormats.set('B&M Singles', {"skuCol":1, "priceCol": 6})//push default values for B&M file structure
+fileFormats.set('Reggio', {"skuCol":2, "priceCol": 13, "matCol": 6})//push default values for Reggio file structure
 
 const overrideNode = document.getElementById("overridePrice");
 overrideNode.addEventListener("keyup", function(event) { // detect enter key
@@ -352,11 +354,19 @@ document.getElementById("closeFormat").addEventListener('click', function(){
     let BM_setSKU = document.getElementById("BM_setSKU")
     let BM_setPrice = document.getElementById("BM_setPrice")
 
+    let RG_setSKU = document.getElementById("RG_setSKU")
+    let RG_setPrice = document.getElementById("RG_setPrice")
+    let RG_setMat = document.getElementById("RG_setMaterial")
+
 
     if(fileFormats.has('B&M Singles')){
         fileFormats.delete('B&M Singles');
     }
 
+    if(fileFormats.has('Reggio')){
+        fileFormats.delete('Reggio');
+    }
+    fileFormats.set('Reggio', {"skuCol":RG_setSKU.value, "priceCol": RG_setPrice.value, "matCol": RG_setMat.value})//reset Reggio file structure
     fileFormats.set('B&M Singles', {"skuCol":BM_setSKU.value, "priceCol": BM_setPrice.value})
 
     // Loop through custom formats and add them to the fileFormats map
