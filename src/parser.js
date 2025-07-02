@@ -406,8 +406,6 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                 let price = Math.round(row.values[priceCol].result) ?? row.values[priceCol]; // handle the case where price is an object with a result property
                 let sku = row.values[skuCol].result ?? row.values[skuCol]; // handle the case where sku is an object with a result property
 
-                console.log("SKU: " + sku + " Price: " + price + " Rounded Price: " + row.values[priceCol].result + " value: " + row.values[priceCol]);
-
                 if(typeof sku !== 'string'){
                     sku = sku.toString(); // convert to string if not already
                 }
@@ -420,6 +418,10 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                     sku = sku.concat("A");
                     for(let color of aluminumSteelColors){
                         let variantSKU = sku + color + "NH"; // Aluminum web default is NH
+                        if (overridesMap.has(variantSKU)){
+                            price = parseInt(overridesMap.get(variantSKU))
+                            console.log("price for "+ variantSKU + " was overridden to "+ price)
+                        }
                         downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                     }
                 }else if(row.values[matCol] == "STEEL"){
@@ -427,16 +429,28 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                     sku = sku.concat("S");
                     for(let color of aluminumSteelColors){
                         let variantSKU = sku + color + "H"; // Steel web default is H
+                        if (overridesMap.has(variantSKU)){
+                            price = parseInt(overridesMap.get(variantSKU))
+                            console.log("price for "+ variantSKU + " was overridden to "+ price)
+                        }
                         downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                     }
                 }else if(row.values[matCol] == "IRON"){
                     sku = sku.concat("NH");
+                    if (overridesMap.has(sku)){
+                        price = parseInt(overridesMap.get(sku))
+                        console.log("price for "+ sku + " was overridden to "+ price)
+                    }
+                    downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet 
                 } else if(row.values[matCol] == undefined){
                     //console.log("LOUVER SKU: " + sku);
                     sku = sku.concat("BL");
+                    if (overridesMap.has(sku)){
+                        price = parseInt(overridesMap.get(sku))
+                        console.log("price for "+ sku + " was overridden to "+ price)
+                    }
                     downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet 
                 }
-
                     //console.log(" SKU Value: " + sku + " Price Value: " + price);  
                 }
             })
