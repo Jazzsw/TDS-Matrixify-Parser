@@ -25,16 +25,14 @@ import { addFile } from './uiDriver.js';
   });
 
   // Handle manual selection
-  fileInput.addEventListener('change', () => {
-    handleFiles(fileInput.files);
-  });
+  // fileInput.addEventListener('change', () => {
+  //   handleFiles(fileInput.files);
+  // });
 
-  // Example function to process files
   function handleFiles(files) {
     for (const file of files) {
       console.log('File:', file.name, file.size, file.type);
       addFile(file);
-      // You can add your file processing logic here
     }
   }
 

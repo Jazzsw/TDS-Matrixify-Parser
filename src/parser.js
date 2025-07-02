@@ -18,6 +18,7 @@ const codeMap = {
     "-PN": "-C14",
     "-BN": "-C15",
     "-PL": "-C3",
+    "-BK": "-C19"
 };
 
 const downloadWorkbook = new ExcelJS.Workbook();
@@ -439,6 +440,5 @@ function downloadFile(downloadSheet){
           saveAs(blob, 'SheetForge Export.xlsx'); // Trigger download
         });
     
-    //downloadWorkbook = new ExcelJS.Workbook(); // reset the workbook for the next download
-    downloadWorkbook.removeWorksheet(downloadSheet.id)
+    downloadWorkbook.removeWorksheet(downloadSheet.id)// reset the worksheet for the next download
 }

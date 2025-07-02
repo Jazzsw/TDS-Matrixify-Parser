@@ -244,7 +244,6 @@ dropZone.addEventListener('change', async (event) => {
     dropZone.classList.remove('hover');
     //c.innerHTML = "Reading file...";
 
-
     const file = event.target.files[0];
     if (!file) {
       //c.innerHTML = "No file selected.";
@@ -263,6 +262,8 @@ dropZone.addEventListener('change', async (event) => {
   export function addFile(file){
 
     fileObjList.push(file);
+
+    console.log(JSON.stringify(fileObjList))
 
     let filename = file.name
     let parent = document.getElementById("filesWrapper")
