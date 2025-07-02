@@ -68,3 +68,5 @@ Custom file uploads can not do things such as replace "-PB" with "-C3NL" or
 concatenate separate pieces of an SKU from different columns. This is because 
 the algorithm must understand the format it is reading, and to provide the 
 most possible file types Custom files must adhere to a basic standard.
+NOTE: when adding custom column numbers for sheets remember that hidden columns DO
+count towards the column number.

@@ -61,6 +61,9 @@ document.getElementById("createFile").addEventListener('click', async function()
 
     //Loop through the files and process them based on their dropdown classification 
     for (let i = 0; i<filePairings.length; i++){
+        if(filePairings[i].type.startsWith("custom_")){
+            parseCustom(filePairings[i].file, fileFormats.get(filePairings[i].type).skuCol, fileFormats.get(filePairings[i].type).priceCol, commandMode)
+        }
         switch (filePairings[i].type){
             case "B&M Singles":
                 console.log("B&M TRIGGERED")
@@ -72,9 +75,8 @@ document.getElementById("createFile").addEventListener('click', async function()
                 await parseBM(filePairings[i].file, fileFormats.get('B&M Singles').skuCol, fileFormats.get('B&M Singles').priceCol);//use the fileformat map from UI driver to get any possible override of the default file formats
                 await writeFile(masterFile, commandMode, BM_map)
                 break;
-            
             case "Reggio":
-                await parseReg(filePairings[i].file, 2, 13, 6, commandMode);
+                await parseReg(filePairings[i].file, fileFormats.get('Reggio').skuCol, fileFormats.get('Reggio').priceCol, fileFormats.get('Reggio').matCol, commandMode);//
                 break;
         }
 
@@ -403,32 +405,51 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
             worksheet.eachRow((row, rowNumber) => {
                 let price = Math.round(row.values[priceCol].result) ?? row.values[priceCol]; // handle the case where price is an object with a result property
                 let sku = row.values[skuCol].result ?? row.values[skuCol]; // handle the case where sku is an object with a result property
-                
+
+                console.log("SKU: " + sku + " Price: " + price + " Rounded Price: " + row.values[priceCol].result + " value: " + row.values[priceCol]);
+
                 if(typeof sku !== 'string'){
                     sku = sku.toString(); // convert to string if not already
                 }
 
-                if(row.values[matCol] == "ALUMINUM"){
-                    console.log("ALUMINUM SKU: " + sku);
-                    sku = sku.concat("A");
-                }else if(row.values[matCol] == "STEEL"){
-                    console.log("STEEL SKU: " + sku);
-                    sku = sku.concat("S");
-                }else if(row.values[matCol] == undefined){
-                    console.log("LOUVER SKU: " + sku);
-                    sku = sku.concat("BL");
-                }
-                //============FIGURE OUT BL FINISH CODE ================//
-
+                let aluminumSteelColors = ["SG", "RB", "S", "W", "B",""]//B is Black. SG is Sun Gold, RB is Oil Rubbed Bronze. S is Silver. W is White.
                 if(!isNaN(price)){
-                    //console.log(" SKU Value: " + sku + " Price Value: " + price);
-                    downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet   
+
+                if(row.values[matCol] == "ALUMINUM"){
+                    //console.log("ALUMINUM SKU: " + sku);
+                    sku = sku.concat("A");
+                    for(let color of aluminumSteelColors){
+                        let variantSKU = sku.concat(color);
+                        downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                    }
+                }else if(row.values[matCol] == "STEEL"){
+                    //console.log("STEEL SKU: " + sku);
+                    sku = sku.concat("S");
+                    for(let color of aluminumSteelColors){
+                        let variantSKU = sku.concat(color);
+                        downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                    }
+                }else if(row.values[matCol] == undefined){
+                    //console.log("LOUVER SKU: " + sku);
+                    sku = sku.concat("BL");
+                    downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet 
+                }
+
+                    //console.log(" SKU Value: " + sku + " Price Value: " + price);  
                 }
             })
         }
     })
 
 
+}
+
+
+
+
+
+function parseCustom(file, skuCol, priceCol, mode){
+    alert("Custom file upload detected, parsing... skuCol: " + skuCol + " priceCol: " + priceCol);
 }
 
 

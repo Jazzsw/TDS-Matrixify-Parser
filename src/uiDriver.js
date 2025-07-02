@@ -15,7 +15,7 @@ let options = ["Current Shopify Data", "B&M Singles", "Reggio"] //array of dropd
 // Price Override
 let overridesCount = 0; // counter to tell when overrides are empty for display
 fileFormats.set('B&M Singles', {"skuCol":1, "priceCol": 6})//push default values for B&M file structure
-fileFormats.set('Reggio', {"skuCol":2, "priceCol": 13, "matCol": 6})//push default values for Reggio file structure
+fileFormats.set('Reggio', {"skuCol":2, "priceCol": 20, "matCol": 6})//push default values for Reggio file structure
 
 const overrideNode = document.getElementById("overridePrice");
 overrideNode.addEventListener("keyup", function(event) { // detect enter key
@@ -43,11 +43,11 @@ overrideNode.addEventListener("keyup", function(event) { // detect enter key
             deleteBtn.textContent = 'Delete';
 
             //create the delete logic for the delete button
-            deleteBtn.addEventListener('click', () => {
-
+            deleteBtn.addEventListener('click', function () {
                 // let index = overridesMap.indexOf(overrideObj);
                 // overridesMap.splice(index, 1)
-                overridesMap.delete(overrideObj)
+                overridesMap.delete(code)
+                console.log(JSON.stringify(overridesMap))
                 
                 newElement.remove();
                 overridesCount--
@@ -101,7 +101,8 @@ document.getElementById("overrideBtn").addEventListener('click', function(){
 
             // let index = overridesMap.indexOf(overrideObj);
             // overridesMap.splice(index, 1)
-            overridesMap.delete(overrideObj)
+            overridesMap.delete(code)
+            console.log(JSON.stringify(overridesMap))
 
             newElement.remove();
             overridesCount--
