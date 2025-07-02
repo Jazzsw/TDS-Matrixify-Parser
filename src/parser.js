@@ -142,26 +142,19 @@ async function parseBM(file, skuCol, priceCol){
             SKU = "BM-".concat(SKU);
                 
                 
-            if (overridesMap.has(SKU)){
-                price = parseInt(overridesMap.get(SKU))
-                console.log("price for "+ SKU + " was overrided to "+ price)
-            }
+            price = checkOverrides(SKU, price); // check for overrides
                 
             //required to get the proper postfix (ie. C3NL <- PB)
-            let goodCode = SKU.slice(SKU.lastIndexOf("-")+1)
-            let goodPrefix = "BM-".concat(prefix)
+            let goodCode = SKU.slice(SKU.lastIndexOf("-")+1);
+            let goodPrefix = "BM-".concat(prefix);
             if(BM_map.has(goodPrefix)){ // if the prefix exists then simply push a variation code to the info array
-                BM_map.get(goodPrefix).info.push({'code': goodCode, 'price': price})
+                BM_map.get(goodPrefix).info.push({'code': goodCode, 'price': price});
             } else{ // if the prefix does not exist then create a new object in the Map
                 BM_map.set(goodPrefix, {'info': [{'code': goodCode, 'price': price}]});
-            }
-            
+            };
         });
-    })
-    //debug printing the object in JSON format
-    // const obj = Object.fromEntries(BM_map);
-    // const jsonString = JSON.stringify(obj); 
-    // console.log(jsonString);
+    });
+
     return 1;
 }
 
@@ -192,8 +185,6 @@ function replaceCode(SKU, code){
         );
         return SKU.concat(code);
     }
-    
-
 }
 
 function arrToStr(array){
@@ -221,8 +212,6 @@ function arrToStr(array){
  * @summary takes the existing data from shopify and compares the price of the C3NL and the C7NL to find the custom 
  * price diff for each item. It stores this data in the "existingData" map. 
  */
-
-
 
 async function handleExistingData(file){
 
@@ -331,19 +320,17 @@ async function writeFile(file, mode, map){
 
     workbook.eachSheet((worksheet) => {
         worksheet.eachRow((row, rowNumber) => {
-            if(rowNumber == 1){
+            if(rowNumber == 1){ // use row 1 to find the SKU and Price columns
                for(let i = 0; i<row.values.length; i++){
-                    if(row.values[i] == "Variant SKU"){
+                    if(row.values[i] == "Variant SKU"){ //names are by convention based on the Matrixify docs
                         skuCol = i;
-                        //console.log('SKU COL SET TO '+ skuCol)
                     }
-                    if(row.values[i] == "Variant Price"){
+                    if(row.values[i] == "Variant Price"){ //names are by convention based on the Matrixify docs
                         priceCol = i;
-                        //console.log('Price COL SET TO '+ priceCol)
                     }
                 }
 
-                if (!skuCol || !priceCol) {
+                if (!skuCol || !priceCol) { // if the SKU or Price columns are not found then alert the user
                     alert("Required headers not found. Ensure 'Variant SKU' and 'Variant Price' exist within the Shopify export file");
                     return;
                 }
@@ -375,10 +362,7 @@ async function writeFile(file, mode, map){
                     if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){ // if the code is one of the custom finishes, then set the price to the C3NL price plus the pre-calculated diff
                         //console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
                         price = newPrice + (existingData.get(prefix).diff)
-                        if (overridesMap.has(SKU)){
-                            price = parseInt(overridesMap.get(SKU))
-                            console.log("price for "+ SKU + " was overrided to "+ price)
-                        }
+                        price = checkOverrides(SKU, price); // check for overrides
                     }
                     downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet   
                 }
@@ -437,17 +421,11 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                         }
                     }else if(row.values[matCol] == "IRON"){
                         sku = sku.concat("NH");
-                        if (overridesMap.has(sku)){ // handle sku overrides
-                            price = parseInt(overridesMap.get(sku))
-                            console.log("price for "+ sku + " was overridden to "+ price)
-                        }
+                        price = checkOverrides(sku, price); // check for overrides
                         downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet 
                     } else if(row.values[matCol] == undefined){ // empty material column means it is a louver register
                         sku = sku.concat("BL");
-                        if (overridesMap.has(sku)){// handle sku overrides
-                            price = parseInt(overridesMap.get(sku))
-                            console.log("price for "+ sku + " was overridden to "+ price)
-                        }
+                        price = checkOverrides(sku, price); // check for overrides
                         downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet 
                     }
                 }
@@ -491,6 +469,15 @@ async function parseCustom(file, skuCol, priceCol, mode){
     })
 }
 
+
+function checkOverrides(SKU, originalPrice){
+    if (overridesMap.has(SKU)){ // handle sku overrides
+        let price = parseInt(overridesMap.get(SKU))
+        console.log("price for "+ SKU + " was overridden to "+ price)
+        return price;
+    }
+    return originalPrice;
+}
 
 
 
