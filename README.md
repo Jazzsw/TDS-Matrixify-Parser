@@ -1,5 +1,6 @@
 # SheetForge (TDS-Matrixify-Parser)
-Parser to take TDS sheets format pricelist and generate a Matrixify-readable file
+An advanced parser to take several sheets of different formats, in addition to user inputs 
+and generate and download a single Matrixify-readable file
 
 
 ## ==================== Functionality ==================== ##
@@ -11,15 +12,15 @@ the other options, and their affects can be found in the Matrixify docs found he
 https://matrixify.app/documentation/list-of-commands-across-matrixify-sheets/.
 
 # Bulk Tags #
-This allows the user to add tags in bulk to all the items that the price is being 
-updated for. Tags can be added via the input box on the left bar of the app, and 
+This allows the user to add tags in bulk to all items being updated. 
+Tags can be added via the input box in the top left of the sidebar, and 
 can be removed using the delete button on each tag item once it gets added.
 
 # Item Overrides #
 This allows for users to override the price updates for items based on their full 
-SKU. By specifying the SKU to override and the desired price, that item will ignore 
+SKU. By specifying the SKU to override and the desired price, the given item will ignore 
 the new price listed in the uploaded files and will instead update based on the 
-value that the user has indicated.
+value that the user has selected.
 
 # Format Info #
 This allows users to view default settings and specify changes to the input file

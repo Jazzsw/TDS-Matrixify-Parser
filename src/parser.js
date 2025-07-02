@@ -78,7 +78,6 @@ document.getElementById("createFile").addEventListener('click', async function()
         }
         switch (filePairings[i].type){
             case "B&M Singles":
-                //console.log("B&M TRIGGERED")
                 await handleExistingData(masterFile);
                 if(undefinedCount > 10){
                     alert("Warning: The program identified [" +undefinedCount+ "] undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met")
@@ -478,8 +477,6 @@ function checkOverrides(SKU, originalPrice){
     }
     return originalPrice;
 }
-
-
 
 
 function downloadFile(downloadSheet){
