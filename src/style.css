@@ -322,6 +322,9 @@ input[type="file"] {
     margin: 2vh;
     text-align: center;
 }
+.rgFormat{
+    width: 8vw;
+}
 
 .customFormat{
     display: flex;
@@ -330,4 +333,11 @@ input[type="file"] {
 .textNode{
     margin-top: auto;
     margin-bottom: auto;
+}
+
+.customFormatTitle{
+    color: #ccc;
+    background-color: #28282B;
+    font-family: "Instrument Sans", sans-serif;
+    margin-right: 2vh;
 }

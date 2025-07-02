@@ -414,6 +414,9 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                 }else if(row.values[matCol] == "STEEL"){
                     console.log("STEEL SKU: " + sku);
                     sku = sku.concat("S");
+                }else if(row.values[matCol] == undefined){
+                    console.log("LOUVER SKU: " + sku);
+                    sku = sku.concat("BL");
                 }
                 //============FIGURE OUT BL FINISH CODE ================//
 
