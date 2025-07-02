@@ -41,12 +41,24 @@ document.getElementById("createFile").addEventListener('click', async function()
         { header: 'Tags', key: 'tags', width: 10},
         { header: 'Tags Command', key: 'tagscommand', width: 15}
     ];
-    
+    let shopifyFlag = false;
+    let BMFlag = false;
+
     Array.from(dropDownElements).forEach(function (element) {//loop for each dropdown pair it with the corresponding file object 
         let pair = {"file": fileObjList[index], "type": element.value}
         filePairings.push(pair)
+        if(element.value == "Current Shopify Data"){ // if the file is the current shopify data then set the flag to false
+            shopifyFlag = true;
+        }
+        if(element.value == "B&M Singles"){ // if the file is the B&M Singles then set the flag to false
+            BMFlag = true;
+        }
         index++;
     })
+
+    if(shopifyFlag && !BMFlag){
+        alert("Warning: You are uploading a Shopify data file without a B&M file. This will have no effect. Please see README documentation on Shopify Export Files or B&M Files for more information")
+    }
 
     //First we must isolate and remove the current shopify data so we can find the custom finish cost diff for each item 
     for(let i = 0; i<filePairings.length; i++){  
@@ -62,11 +74,11 @@ document.getElementById("createFile").addEventListener('click', async function()
     //Loop through the files and process them based on their dropdown classification 
     for (let i = 0; i<filePairings.length; i++){
         if(filePairings[i].type.startsWith("custom_")){
-            parseCustom(filePairings[i].file, fileFormats.get(filePairings[i].type).skuCol, fileFormats.get(filePairings[i].type).priceCol, commandMode)
+            await parseCustom(filePairings[i].file, fileFormats.get(filePairings[i].type).skuCol, fileFormats.get(filePairings[i].type).priceCol, commandMode)
         }
         switch (filePairings[i].type){
             case "B&M Singles":
-                console.log("B&M TRIGGERED")
+                //console.log("B&M TRIGGERED")
                 await handleExistingData(masterFile);
                 if(undefinedCount > 10){
                     alert("Warning: The program identified [" +undefinedCount+ "] undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met")
@@ -81,6 +93,7 @@ document.getElementById("createFile").addEventListener('click', async function()
         }
 
     }
+
     downloadFile(downloadSheet); //trigger the download of the file
 
 })
@@ -232,11 +245,11 @@ async function handleExistingData(file){
                 for(let i = 0; i<row.values.length; i++){
                     if(row.values[i] == "Variant SKU"){
                         skuCol = i;
-                        console.log('SKU COL SET TO '+ skuCol)
+                        //console.log('SKU COL SET TO '+ skuCol)
                     }
                     if(row.values[i] == "Variant Price"){
                         priceCol = i;
-                        console.log('PRice COL SET TO '+ priceCol)
+                        //console.log('PPrice COL SET TO '+ priceCol)
                     }
                 }
             }else{
@@ -250,7 +263,7 @@ async function handleExistingData(file){
                 //catch non-SKU entries
                 if (!SKU || typeof SKU !== 'string'){
                     undefinedCount++;
-                    console.log("ERROR SKU CAUGHT " + SKU)
+                    //console.log("ERROR SKU CAUGHT " + SKU)
                 } else{
                     lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
                     code = SKU.slice(lastIndex);
@@ -322,11 +335,11 @@ async function writeFile(file, mode, map){
                for(let i = 0; i<row.values.length; i++){
                     if(row.values[i] == "Variant SKU"){
                         skuCol = i;
-                        console.log('SKU COL SET TO '+ skuCol)
+                        //console.log('SKU COL SET TO '+ skuCol)
                     }
                     if(row.values[i] == "Variant Price"){
                         priceCol = i;
-                        console.log('Price COL SET TO '+ priceCol)
+                        //console.log('Price COL SET TO '+ priceCol)
                     }
                 }
 
@@ -350,9 +363,6 @@ async function writeFile(file, mode, map){
                     code = SKU.slice(lastIndex);
                     prefix = SKU.slice(0,lastIndex);
                     SKU = replaceCode(prefix, code);
-
-                    //console.log("SKU SEARCH:" + SKU)
-                    //console.log("PRE SEARCH:" + map.get(prefix))
 
                     if(map.get(prefix) != undefined){ // try to find the corresponding item in the good price map 
                         for(let i = 0; i< map.get(prefix).info.length; i++){
@@ -379,14 +389,6 @@ async function writeFile(file, mode, map){
     console.log("WRITE COMPLETE")
     undefinedCount = 0;
 
-    //trigger download logic 
-    // downloadWorkbook.xlsx.writeBuffer().then((buffer) => { //convert buffer to blob and trigger download
-    //         const blob = new Blob([buffer], {
-    //             type:
-    //                 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    //         });
-    //       saveAs(blob, 'test.xlsx'); // Trigger download
-    //     });
 }
 
 async function parseReg(file, skuCol, priceCol, matCol, mode){
@@ -413,60 +415,83 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                 let aluminumSteelColors = ["SG", "RB", "S", "W", "B",""]//B is Black. SG is Sun Gold, RB is Oil Rubbed Bronze. S is Silver. W is White.
                 if(!isNaN(price)){
 
-                if(row.values[matCol] == "ALUMINUM"){
-                    //console.log("ALUMINUM SKU: " + sku);
-                    sku = sku.concat("A");
-                    for(let color of aluminumSteelColors){
-                        let variantSKU = sku + color + "NH"; // Aluminum web default is NH
-                        if (overridesMap.has(variantSKU)){
-                            price = parseInt(overridesMap.get(variantSKU))
-                            console.log("price for "+ variantSKU + " was overridden to "+ price)
+                    if(row.values[matCol] == "ALUMINUM"){
+                        sku = sku.concat("A");
+                        for(let color of aluminumSteelColors){
+                            let variantSKU = sku + color + "NH"; // Aluminum web default is NH
+                            if (overridesMap.has(variantSKU)){ // handle sku overrides
+                                price = parseInt(overridesMap.get(variantSKU))
+                                console.log("price for "+ variantSKU + " was overridden to "+ price)
+                            }
+                            downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                         }
-                        downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
-                    }
-                }else if(row.values[matCol] == "STEEL"){
-                    //console.log("STEEL SKU: " + sku);
-                    sku = sku.concat("S");
-                    for(let color of aluminumSteelColors){
-                        let variantSKU = sku + color + "H"; // Steel web default is H
-                        if (overridesMap.has(variantSKU)){
-                            price = parseInt(overridesMap.get(variantSKU))
-                            console.log("price for "+ variantSKU + " was overridden to "+ price)
+                    }else if(row.values[matCol] == "STEEL"){
+                        sku = sku.concat("S");
+                        for(let color of aluminumSteelColors){
+                            let variantSKU = sku + color + "H"; // Steel web default is H
+                            if (overridesMap.has(variantSKU)){ // handle sku overrides
+                                price = parseInt(overridesMap.get(variantSKU))
+                                console.log("price for "+ variantSKU + " was overridden to "+ price)
+                            }
+                            downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                         }
-                        downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                    }else if(row.values[matCol] == "IRON"){
+                        sku = sku.concat("NH");
+                        if (overridesMap.has(sku)){ // handle sku overrides
+                            price = parseInt(overridesMap.get(sku))
+                            console.log("price for "+ sku + " was overridden to "+ price)
+                        }
+                        downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet 
+                    } else if(row.values[matCol] == undefined){ // empty material column means it is a louver register
+                        sku = sku.concat("BL");
+                        if (overridesMap.has(sku)){// handle sku overrides
+                            price = parseInt(overridesMap.get(sku))
+                            console.log("price for "+ sku + " was overridden to "+ price)
+                        }
+                        downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet 
                     }
-                }else if(row.values[matCol] == "IRON"){
-                    sku = sku.concat("NH");
-                    if (overridesMap.has(sku)){
-                        price = parseInt(overridesMap.get(sku))
-                        console.log("price for "+ sku + " was overridden to "+ price)
-                    }
-                    downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet 
-                } else if(row.values[matCol] == undefined){
-                    //console.log("LOUVER SKU: " + sku);
-                    sku = sku.concat("BL");
-                    if (overridesMap.has(sku)){
-                        price = parseInt(overridesMap.get(sku))
-                        console.log("price for "+ sku + " was overridden to "+ price)
-                    }
-                    downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet 
-                }
-                    //console.log(" SKU Value: " + sku + " Price Value: " + price);  
                 }
             })
         }
     })
 
-
 }
 
 
+async function parseCustom(file, skuCol, priceCol, mode){
+        //excelJS overhead to load a file
+        const buffer = await file.arrayBuffer();
+        const workbook = new ExcelJS.Workbook();
+        try{
+            await workbook.xlsx.load(buffer);
+        }catch(e){
+            alert("ERROR: It appears the file that you are trying to upload is not a .xlsx file");
+            return;
+        }
 
+     workbook.eachSheet((worksheet) => {
+        worksheet.eachRow((row, rowNumber) => {
+            let SKU = row.values[skuCol] // find SKU
+            let price = row.values[priceCol].result ?? row.values[priceCol]
 
+            //console.log("SKU: " + SKU + " Price: " + price)
 
-function parseCustom(file, skuCol, priceCol, mode){
-    alert("Custom file upload detected, parsing... skuCol: " + skuCol + " priceCol: " + priceCol);
+            if(typeof SKU !== 'string'){
+                SKU = SKU.toString(); // convert to string if not already
+            }
+            if(!isNaN(price)){
+                if(overridesMap.has(SKU)){ // if the SKU is in the overrides map then use the overridden price
+                    price = parseInt(overridesMap.get(SKU))
+                    console.log("price for "+ SKU + " was overridden to "+ price)
+                }
+                //console.log("SKU: " + SKU + " Price: " + price)
+                downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+            }
+        })
+    })
 }
+
+
 
 
 
