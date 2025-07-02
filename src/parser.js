@@ -21,16 +21,8 @@ const codeMap = {
 };
 
 const downloadWorkbook = new ExcelJS.Workbook();
+let downloadSheet = null;
 
-const downloadSheet = downloadWorkbook.addWorksheet('Products');
-
-downloadSheet.columns = [ // create the columns for the Matrixify file, these header names are very specific, see Matrixify docs for more info
-    { header: 'Variant SKU', key: 'sku', width: 30 },
-    { header: 'Variant Price', key: 'price', width: 10 },
-    { header: 'Command', key: 'command', width: 10},
-    { header: 'Tags', key: 'tags', width: 10},
-    { header: 'Tags Command', key: 'tagscommand', width: 15}
-];
 
 document.getElementById("createFile").addEventListener('click', async function(){
 
@@ -39,6 +31,15 @@ document.getElementById("createFile").addEventListener('click', async function()
     let dropDownElements = document.getElementsByClassName("filetypeDropdown")
     let index = 0;
 
+    downloadSheet = downloadWorkbook.addWorksheet('Products');
+
+    downloadSheet.columns = [ // create the columns for the Matrixify file, these header names are very specific, see Matrixify docs for more info
+        { header: 'Variant SKU', key: 'sku', width: 30 },
+        { header: 'Variant Price', key: 'price', width: 10 },
+        { header: 'Command', key: 'command', width: 10},
+        { header: 'Tags', key: 'tags', width: 10},
+        { header: 'Tags Command', key: 'tagscommand', width: 15}
+    ];
     
     Array.from(dropDownElements).forEach(function (element) {//loop for each dropdown pair it with the corresponding file object 
         let pair = {"file": fileObjList[index], "type": element.value}
@@ -77,7 +78,7 @@ document.getElementById("createFile").addEventListener('click', async function()
         }
 
     }
-    downloadFile(); //trigger the download of the file
+    downloadFile(downloadSheet); //trigger the download of the file
 
 })
 
@@ -428,7 +429,7 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
 
 
 
-function downloadFile(){
+function downloadFile(downloadSheet){
 
     downloadWorkbook.xlsx.writeBuffer().then((buffer) => { //convert buffer to blob and trigger download
             const blob = new Blob([buffer], {
@@ -438,5 +439,6 @@ function downloadFile(){
           saveAs(blob, 'SheetForge Export.xlsx'); // Trigger download
         });
     
-    downloadWorkbook = new ExcelJS.Workbook(); // reset the workbook for the next download
+    //downloadWorkbook = new ExcelJS.Workbook(); // reset the workbook for the next download
+    downloadWorkbook.removeWorksheet(downloadSheet.id)
 }

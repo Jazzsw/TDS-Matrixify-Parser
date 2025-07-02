@@ -25,11 +25,13 @@ if(require('electron-squirrel-startup')) {
 
   win.loadFile('src/index.html')
   win.setMinimumSize(800, 600)
-
-  win.setTitleBarOverlay({
-  color: '#28282B',
-  symbolColor: "#ccc", // symbol color here
-})
+  
+  if (process.platform !== 'darwin') {
+    win.setTitleBarOverlay({
+    color: '#28282B',
+    symbolColor: "#ccc", // symbol color here
+    })
+  }
 }
 
 
