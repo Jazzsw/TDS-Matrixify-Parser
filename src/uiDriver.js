@@ -1,6 +1,7 @@
 //import { file } from 'electron-settings';
 import ExcelJS from 'https://cdn.jsdelivr.net/npm/exceljs/+esm';
 
+
 // Arrays to store bulk update tags and price overrides
 export var tagsArr = [] // array of strings (tags)
 export var overridesMap = new Map () // map of overrides matching the sku to the override price
@@ -259,7 +260,7 @@ dropZone.addEventListener('change', async (event) => {
 
   });
 
-  function addFile(file){
+  export function addFile(file){
 
     fileObjList.push(file);
 

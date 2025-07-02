@@ -3,6 +3,10 @@ const { ipcMain } = require('electron');
 const electron = require('electron')
 const settings = require('electron-settings');
 
+if(require('electron-squirrel-startup')) {
+  app.quit();
+}
+
 //Simple window creation with browserWindow loading layout from index 
   const createWindow = () => {
   const win = new BrowserWindow({//define window size
@@ -21,7 +25,14 @@ const settings = require('electron-settings');
 
   win.loadFile('src/index.html')
   win.setMinimumSize(800, 600)
+
+  win.setTitleBarOverlay({
+  color: '#28282B',
+  symbolColor: "#ccc", // symbol color here
+})
 }
+
+
 
 //MacOS window managment  
 app.whenReady().then(() => {

@@ -397,7 +397,7 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
     }
 
     workbook.eachSheet((worksheet) => {
-        if(worksheet.name == "Master Sheet"){
+        if(worksheet.name.toLowerCase() == "master sheet"){
             worksheet.eachRow((row, rowNumber) => {
                 let price = Math.round(row.values[priceCol].result) ?? row.values[priceCol]; // handle the case where price is an object with a result property
                 let sku = row.values[skuCol].result ?? row.values[skuCol]; // handle the case where sku is an object with a result property
@@ -429,11 +429,14 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
 
 
 function downloadFile(){
+
     downloadWorkbook.xlsx.writeBuffer().then((buffer) => { //convert buffer to blob and trigger download
             const blob = new Blob([buffer], {
                 type:
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
             });
-          saveAs(blob, 'test.xlsx'); // Trigger download
+          saveAs(blob, 'SheetForge Export.xlsx'); // Trigger download
         });
+    
+    downloadWorkbook = new ExcelJS.Workbook(); // reset the workbook for the next download
 }
