@@ -419,17 +419,19 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                     //console.log("ALUMINUM SKU: " + sku);
                     sku = sku.concat("A");
                     for(let color of aluminumSteelColors){
-                        let variantSKU = sku.concat(color);
+                        let variantSKU = sku + color + "NH"; // Aluminum web default is NH
                         downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                     }
                 }else if(row.values[matCol] == "STEEL"){
                     //console.log("STEEL SKU: " + sku);
                     sku = sku.concat("S");
                     for(let color of aluminumSteelColors){
-                        let variantSKU = sku.concat(color);
+                        let variantSKU = sku + color + "H"; // Steel web default is H
                         downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                     }
-                }else if(row.values[matCol] == undefined){
+                }else if(row.values[matCol] == "IRON"){
+                    sku = sku.concat("NH");
+                } else if(row.values[matCol] == undefined){
                     //console.log("LOUVER SKU: " + sku);
                     sku = sku.concat("BL");
                     downloadSheet.addRow({sku: sku, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet 
