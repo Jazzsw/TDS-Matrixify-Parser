@@ -60,7 +60,9 @@ document.getElementById("createFile").addEventListener('click', async function()
     if(shopifyFlag && !BMFlag){
         alert("Warning: You are uploading a Shopify data file without a B&M file. This will have no effect. Please see README documentation on Shopify Export Files or B&M Files for more information")
     }
-
+    if(!shopifyFlag && BMFlag){
+        alert("Warning: You are uploading a B&M file without a Shopify data file. This will cause the program to fail.");
+    }
     //First we must isolate and remove the current shopify data so we can find the custom finish cost diff for each item 
     for(let i = 0; i<filePairings.length; i++){  
         if(filePairings[i].type == "Current Shopify Data"){
@@ -312,7 +314,7 @@ async function writeFile(file, mode, map){
     try{
         await workbook.xlsx.load(buffer);
     }catch(e){
-        alert("ERROR: Write file failed.");
+        alert("ERROR: Write file failed to load.");
         return;
     }
 
