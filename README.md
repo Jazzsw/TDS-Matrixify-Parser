@@ -12,7 +12,7 @@ and generate and download a single Matrixify-readable file
 ## Command Mode ##
 This changes how the information is read by Shopify. In most cases the "Update"
 option is going to be the right option for standard price updates. Information on
-the other options, and their affects can be found in the Matrixify docs found here
+the other options and their effects can be found in the Matrixify docs found here
 https://matrixify.app/documentation/list-of-commands-across-matrixify-sheets/.
 
 ## Bulk Tags ##
@@ -21,14 +21,14 @@ Tags can be added via the input box in the top left of the sidebar, and
 can be removed using the delete button on each tag item once it gets added.
 
 ## Item Overrides ##
-This allows for users to override the price updates for items based on their full 
+This allows users to override the price updates for items based on their full 
 SKU. By specifying the SKU to override and the desired price, the given item will ignore 
 the new price listed in the uploaded files and will instead update based on the 
 value that the user has selected.
 
 ## Format Info ##
 This allows users to view default settings and specify changes to the input file
-structure. This means that if the SKU or Price columns change for some reason 
+structure. This means that if the SKU or Price columns change for some reason, 
 the user can specify the proper columns for the program to search and process
 in order to maintain functionality. Note that any changes to the standard must
 be specified before each file creation. 
@@ -50,34 +50,34 @@ Note that the program will fail if the files are not properly specified by the u
 When uploading B&M files, it should be noted that it is **Required** that a 
 Shopify Export file is also uploaded along with it. This is because B&M 
 files do not include the custom brass finishes that The Door Store offers.
-Thus to update all B&M items on the website, a Shopify Export file 
+Thus, to update all B&M items on the website, a Shopify Export file 
 is required to calculate the amount that is being charged for the custom
-finish, for each individual item.
+finish for each individual item.
 
 ## Shopify Export File ##
-This file alone is not used for price updates, and will not produce an output
+This file alone is not used for price updates and will not produce an output
 file on its own. These files are used in conjunction with B&M files (as listed
 above) to use existing Shopify data to calculate the custom finish price for 
 each item and add that differential to the B&M updated price. Note that the 
-sheet containing the price data must be called "Products" this is how it will
-be downloaded by default as per the Matrixify standards, however renaming this 
-sheet will result in the program throwing a format warning. (the program will 
-still execute successfully but throw a warning about undefined SKU values)
+sheet containing the price data must be called "Products." This is how it will
+be downloaded by default as per the Matrixify standards; however, renaming this 
+sheet will result in the program throwing a format warning. (The program will 
+still execute successfully, but throw a warning about undefined SKU values)
 
 ## Reggio ##
-When uploading Reggio files it is important to note that **ONLY** the "Master Sheet"
-will be read. This is because the styling of the print and retail pricelist get in
+When uploading Reggio files, it is important to note that **ONLY** the "Master Sheet"
+will be read. This is because the styling of the print and retail price list gets in
 the way of the data processing. This also means that the sheet with the correct data
 *MUST* be named "Master Sheet". 
 
 ## Custom ##
 Custom file formats may be added using the "Format Info / Requirements" tab. These 
-custom formats however **MUST** use the full SKU as it appears on the Shopify site. 
+custom formats, however **MUST** use the full SKU as it appears on the Shopify site. 
 Custom file uploads can not do things such as replace "-PB" with "-C3NL" or 
 concatenate separate pieces of an SKU from different columns. This is because 
 the algorithm must understand the format it is reading, and to provide the 
-most possible file types Custom files must adhere to a basic standard.
-NOTE: when adding custom column numbers for sheets remember that hidden columns DO
+most possible file types, custom files must adhere to a basic standard.
+NOTE: When adding custom column numbers for sheets, remember that hidden columns DO
 count towards the column number.
 
 
@@ -85,18 +85,18 @@ count towards the column number.
 
 ## Warning 1 ##
 ### Warning Text ###
-    Warning: The program identified [#] undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met
+    Warning: The program identified [#] undefined SKU values identified. This is likely due to a formatting error. Check that your file uploads are properly specified using the dropdown, and that the file format requirements are met
 
 ### Warning Reason ###
-This warning is thrown when the program finds over 10 undefined SKU values while iterating through a given sheet, 
-This is most often a format issue, potently caused by a sheet with invalid format or an improper specification from 
+This warning is thrown when the program finds over 10 undefined SKU values while iterating through a given sheet. 
+This is most often a format issue, potentially caused by a sheet with invalid format or an improper specification from 
 the user. This warning can also be thrown in cases where there is no error, but the sheet contains several rows that 
 have data that is not relevant (ie. title rows, blank rows, etc)
 
 ### Troubleshooting ###
-* First check if you have specified the file properly (ie. the dropdown beside the filename properly corresponds with the
+* First, check if you have specified the file properly (ie. The dropdown beside the filename properly corresponds with the
 type of file it is)
-* Check your file continence for unrelated data as mentioned above
+* Check your file content for unrelated data as mentioned above
 * Check the file format requirements above or under the "Format Info / Requirements" tab in the app, and adjust the price 
 and SKU columns if needed.
 
@@ -111,7 +111,7 @@ This warning is thrown when the .xlsx file reader library fails to load the file
 exclusively due to an improper file type.
 
 ### Troubleshooting ###
-* Make sure your file is a .xslx file
+* Make sure your file is a .xlsx file
 * Open your file to make sure it is not corrupted in some way
 
 
@@ -121,7 +121,7 @@ exclusively due to an improper file type.
     Invalid input to replaceCode: { SKU, code }
 
 ### Warning Reason ###
-This is mainly a debug warning and you should not encounter it. This warning is thrown when the
+This is mainly a debug warning, and you should not encounter it. This warning is thrown when the
 SKU value passed to the replacement function (what converts -PB to -C3NL) is not a valid string.
 This could happen if there is an issue with the file format and the program tries to read invalid
 data.
@@ -163,9 +163,9 @@ program will fail, do to an inability to calculate prices for custom finishes.
 Required headers not found. Ensure 'Variant SKU' and 'Variant Price' exist within the Shopify export file
 
 ### Warning Reason ###
-This warning is thrown when attempting to read a Shopify Export file, if the row titles Variant SKU' and 'Variant Price'
+This warning is thrown when attempting to read a Shopify Export file if the row titles' Variant SKU' and 'Variant Price'
 are missing or changed. These row headers are part of the Matrixify Spec and are the default when downloading an export
-file. However if these are changed it will cause the program to fail, as it will not know what column to search.
+file. However, if these are changed, it will cause the program to fail, as it will not know what column to search.
 
 ## Troubleshooting ##
 * Fix the file format for the Shopify file if possible and try again.
