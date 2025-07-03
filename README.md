@@ -3,7 +3,7 @@ An advanced parser to take several sheets of different formats, in addition to u
 and generate and download a single Matrixify-readable file
 
 
-# ==================== Functionality ==================== #
+# Functionality #
 
 ## Command Mode ##
 This changes how the information is read by Shopify. In most cases the "Update"
@@ -40,7 +40,7 @@ Note that the program will fail if the files are not properly specified by the u
 
 
 
-# ==================== File Requirements ==================== #
+# File Requirements #
 
 ## B&M ##
 When uploading B&M files, it should be noted that it is **Required** that a 
@@ -84,10 +84,10 @@ count towards the column number.
     Warning: The program identified [#] undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met
 
 ### Warning Reason ###
-    This warning is thrown when the program finds over 10 undefined SKU values while iterating through a given sheet, 
-    This is most often a format issue, potently caused by a sheet with invalid format or an improper specification from 
-    the user. This warning can also be thrown in cases where there is no error, but the sheet contains several rows that 
-    have data that is not relevant (ie. title rows, blank rows, etc)
+This warning is thrown when the program finds over 10 undefined SKU values while iterating through a given sheet, 
+This is most often a format issue, potently caused by a sheet with invalid format or an improper specification from 
+the user. This warning can also be thrown in cases where there is no error, but the sheet contains several rows that 
+have data that is not relevant (ie. title rows, blank rows, etc)
 
 ### Troubleshooting ###
 * First check if you have specified the file properly (ie. the dropdown beside the filename properly corresponds with the
@@ -100,7 +100,7 @@ and SKU columns if needed.
 
 ## Warning 2 ##
 ### Warning Text ###
-ERROR: It appears the file that you are trying to upload is not a .xlsx file
+    ERROR: It appears the file that you are trying to upload is not a .xlsx file
 
 ### Warning Reason ###
 This warning is thrown when the .xlsx file reader library fails to load the file data. This is almost 
@@ -114,7 +114,7 @@ exclusively due to an improper file type.
 
 ## Warning 3 ##
 ### Warning Text ###
-Invalid input to replaceCode: { SKU, code }
+    Invalid input to replaceCode: { SKU, code }
 
 ### Warning Reason ###
 This is mainly a debug warning and you should not encounter it. This warning is thrown when the
@@ -128,7 +128,7 @@ data.
 
 ## Warning 4 ##
 ### Warning Text ###
-Warning: You are uploading a Shopify data file without a B&M file. This will have no effect. Please see README documentation on Shopify Export Files or B&M Files for more information
+    Warning: You are uploading a Shopify data file without a B&M file. This will have no effect. Please see README documentation on Shopify Export Files or B&M Files for more information
 
 ### Warning Reason ###
 This warning is thrown when you attempt to upload a Shopify Data file without a B&M file. This will not do anything, since 
@@ -141,7 +141,7 @@ the B&M file is what holds the updated price values, and so without it the Shopi
 
 ## Warning 5 ##
 ### Warning Text ###
-Warning: You are uploading a B&M file without a Shopify data file. This will cause the program to fail. Please see README documentation on Shopify Export Files or B&M Files for more information
+    Warning: You are uploading a B&M file without a Shopify data file. This will cause the program to fail. Please see README documentation on Shopify Export Files or B&M Files for more information
 
 ### Warning Reason ###
 This warning is the same as above except reversed. Uploading a B&M file without a Shopify data file means that 
@@ -165,6 +165,7 @@ file. However if these are changed it will cause the program to fail, as it will
 
 ## Troubleshooting ##
 * Fix the file format for the Shopify file if possible and try again.
+* Check for case sensitivity in the column headers
 
 
 

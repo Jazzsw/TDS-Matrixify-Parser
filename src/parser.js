@@ -73,7 +73,6 @@ document.getElementById("createFile").addEventListener('click', async function()
     }
 
 
-
     //Loop through the files and process them based on their dropdown classification 
     for (let i = 0; i<filePairings.length; i++){
         if(filePairings[i].type.startsWith("custom_")){
