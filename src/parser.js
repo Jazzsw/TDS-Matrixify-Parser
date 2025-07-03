@@ -395,7 +395,7 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                     sku = sku.toString(); // convert to string if not already
                 }
 
-                let aluminumSteelColors = ["SG", "RB", "S", "W", "B",""]//B is Black. SG is Sun Gold, RB is Oil Rubbed Bronze. S is Silver. W is White.
+                let aluminumSteelColors = ["MSG", "RB", "S", "W", "B",""]//B is Black. MSG is Sun Gold, RB is Oil Rubbed Bronze. S is Silver. W is White.
                 if(!isNaN(price)){
 
                     if(row.values[matCol] == "ALUMINUM"){
