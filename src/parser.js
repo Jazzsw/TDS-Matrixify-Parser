@@ -355,13 +355,14 @@ async function writeFile(file, mode, map){
                     prefix = SKU.slice(0,lastIndex);
                     SKU = replaceCode(prefix, code);
 
-                    if(map.get(prefix) != undefined){ // try to find the corresponding item in the good price map 
+                    if(map.has(prefix)){ // try to find the corresponding item in the good price map 
                         for(let i = 0; i< map.get(prefix).info.length; i++){
                             if(map.get(prefix).info[i].code == "C3NL"){ // identify the base price using C3NL
                                 newPrice = map.get(prefix).info[i].price // set the newPrice to the C3NL price
                             }
                         }
                     }
+
                     // if the current item being processed is a custom variant then take the C3NL price stored in newPrice and add the diff for this item before saving
                     if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){ // if the code is one of the custom finishes, then set the price to the C3NL price plus the pre-calculated diff
                         //console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
@@ -372,22 +373,35 @@ async function writeFile(file, mode, map){
                         }
                     }else{
                         if(map.has(prefix)){ // try to find the corresponding item in the good price map 
-                            for (let item of map.get(prefix).info){ // if the prefix exists then add the row for each code
-
-                                if (!printedCodes.has(item)) {
+                            
+                            let index = map.get(prefix).info.indexOf(prefix);
+                            //console.log(JSON.stringify(map.get(prefix)));
+                            for (let item of map.get(prefix).info){
+                                if(prefix + "-" + item.code == SKU){
                                     console.log(
-                                        `%c ${JSON.stringify(item)}`,
+                                        `%c ${SKU} + " "${JSON.stringify(item)}`,
                                         "color: green; font-weight: bold;"
                                     );
-
-                                    printedCodes.add(item);
                                     newPrice = item.price; // set the newPrice to the price in the map
                                     newPrice = checkOverrides(SKU, newPrice); // check for overrides
                                     downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                                 }
-
-                            //objIndex++;
                             }
+                                // for (let item of map.get(prefix).info){ // if the prefix exists then add the row for each code
+
+                                // if (!printedCodes.has(item)) {
+                                //     console.log(
+                                //         `%c ${SKU} + " "${JSON.stringify(item)}`,
+                                //         "color: green; font-weight: bold;"
+                                //     );
+                                //     //console.log(prefix + item.code)
+
+                                //     printedCodes.add(item);
+                                //     newPrice = item.price; // set the newPrice to the price in the map
+                                //     newPrice = checkOverrides(SKU, newPrice); // check for overrides
+                                //     downloadSheet.addRow({sku: (prefix + item.code), price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                                // }
+                            //}
                             // for(let i = 0; i< map.get(prefix).info.length; i++){
                             //     price = map.get(prefix).info[i].price
                             //     downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
