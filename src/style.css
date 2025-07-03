@@ -207,7 +207,7 @@ input[type="file"] {
 .filetypeDropdown{
     background-color: #28282B;
     color: #ccc;
-    border-radius: 10px;
+    border-radius: 5px;
 }
 
 #commandWrapper{
