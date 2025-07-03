@@ -54,7 +54,11 @@ finish, for each individual item.
 This file alone is not used for price updates, and will not produce an output
 file on its own. These files are used in conjunction with B&M files (as listed
 above) to use existing Shopify data to calculate the custom finish price for 
-each item and add that differential to the B&M updated price.
+each item and add that differential to the B&M updated price. Note that the 
+sheet containing the price data must be called "Products" this is how it will
+be downloaded by default as per the Matrixify standards, however renaming this 
+sheet will result in the program throwing a format warning. (the program will 
+still execute successfully but throw a warning about undefined SKU values)
 
 # Reggio #
 When uploading Reggio files it is important to note that *ONLY* the "Master Sheet"
@@ -71,3 +75,7 @@ the algorithm must understand the format it is reading, and to provide the
 most possible file types Custom files must adhere to a basic standard.
 NOTE: when adding custom column numbers for sheets remember that hidden columns DO
 count towards the column number.
+
+
+## ==================== Warnings and Troubleshooting ==================== ##
+

@@ -9,10 +9,11 @@ const existingData = new Map(); // map for all existing data from the shopify ex
 const BM_map = new Map(); 
 var masterFile = null; //a file object that gets assigned to the file with all the shopify info [used to loop through to find all the custom available finishes]
 let undefinedCount = 0;
+const printedCodes = new Set(); // used to track the codes that have already been printed to the console
 
 const codeMap = {
     "-PB": "-C3NL",
-    "-OB": "-C10BNL",
+    "-OB": "-C10B",
     "-AB": "-C5NL",
     "-SB": "-C4NL",
     "-PN": "-C14",
@@ -178,10 +179,10 @@ function replaceCode(SKU, code){
         return SKU;
     } else {
         // Unknown code – log it for debugging
-        console.log(
-            `%c SKU NOT CONVERTED ${SKU.concat(code)}`,
-            "color: red; font-weight: bold;"
-        );
+        // console.log(
+        //     `%c SKU NOT CONVERTED ${SKU.concat(code)}`,
+        //     "color: red; font-weight: bold;"
+        // );
         return SKU.concat(code);
     }
 }
@@ -227,72 +228,73 @@ async function handleExistingData(file){
     let skuCol = null //32;
     let priceCol = null//37;
 
+    let foundC7NL = false;
+
     workbook.eachSheet((worksheet) => {
-        worksheet.eachRow((row, rowNumber) => {
-            if(rowNumber == 1){
-                for(let i = 0; i<row.values.length; i++){
-                    if(row.values[i] == "Variant SKU"){
-                        skuCol = i;
-                        //console.log('SKU COL SET TO '+ skuCol)
-                    }
-                    if(row.values[i] == "Variant Price"){
-                        priceCol = i;
-                        //console.log('PPrice COL SET TO '+ priceCol)
-                    }
-                }
-            }else{
-
-                let SKU = row.values[skuCol]
-                let price = row.values[priceCol]
-                let lastIndex = null;
-                let code = null;
-                let prefix = null;
-
-                //catch non-SKU entries
-                if (!SKU || typeof SKU !== 'string'){
-                    undefinedCount++;
-                    //console.log("ERROR SKU CAUGHT " + SKU)
-                } else{
-                    lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
-                    code = SKU.slice(lastIndex);
-                    prefix = SKU.slice(0,lastIndex);
-                    SKU = replaceCode(prefix, code);
-            
-                    if(existingData.has(prefix) == false){ // if the prefix (ie the SKU) does not exist then create the first entry
-                        if(code == "-C3NL"){
-                            existingData.set(prefix, {'C3NL': price, 'C7NL': 0, 'diff': 0})
+        if(worksheet.name.toLowerCase() == "products"){ // only process the master sheet
+            worksheet.eachRow((row, rowNumber) => {
+                if(rowNumber == 1){
+                    for(let i = 0; i<row.values.length; i++){
+                        if(row.values[i] == "Variant SKU"){
+                            skuCol = i;
+                            //console.log('SKU COL SET TO '+ skuCol)
                         }
-                        if(code == "-C7NL"){
-                            existingData.set(prefix, {'C3NL': 0, 'C7NL': price, 'diff': 0})
-                        } 
-                    }else{ // if the prefix exists then update the other value and the diff
-                        if(code == "-C3NL"){
-                            existingData.get(prefix).C3NL = price;
-                            let high = existingData.get(prefix).C7NL;
-                            let low = existingData.get(prefix).C3NL;
-                    
-                            existingData.get(prefix).diff = high-low;
-                                
+                        if(row.values[i] == "Variant Price"){
+                            priceCol = i;
+                            //console.log('PPrice COL SET TO '+ priceCol)
                         }
-                        if(code == "-C7NL"){
-                            existingData.get(prefix).C7NL = price;
-                            let high = existingData.get(prefix).C7NL;
-                            let low = existingData.get(prefix).C3NL;
-                    
-                            existingData.get(prefix).diff = high-low;
-                        } 
                     }
-                }
+                }else{
 
-            }
+                    let SKU = row.values[skuCol]
+                    let price = row.values[priceCol]
+                    let lastIndex = null;
+                    let code = null;
+                    let prefix = null;
+
+                    //catch non-SKU entries
+                    if (!SKU || typeof SKU !== 'string'){
+                        undefinedCount++;
+                        console.log("ERROR SKU CAUGHT " + SKU+ rowNumber)
+                    } else{
+                        lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
+                        code = SKU.slice(lastIndex);
+                        prefix = SKU.slice(0,lastIndex);
+                        SKU = replaceCode(prefix, code);
                 
-        })
-        // debug print in JSON format
-        // const obj = Object.fromEntries(existingData);
-        // const jsonString = JSON.stringify(obj);
-        // console.log(jsonString);
-    })
+                        if(existingData.has(prefix) == false){ // if the prefix (ie the SKU) does not exist then create the first entry
+                            if(code == "-C3NL"){
+                                existingData.set(prefix, {'C3NL': price, 'C7NL': 0, 'diff': 0})
+                            }
+                            if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){
+                                existingData.set(prefix, {'C3NL': 0, 'C7NL': price, 'diff': 0})
+                            }
+                        }else{ // if the prefix exists then update the other value and the diff
+                            if(code == "-C3NL"){
+                                existingData.get(prefix).C3NL = price;
+                                let high = existingData.get(prefix).C7NL;
+                                let low = existingData.get(prefix).C3NL;
+                        
+                                existingData.get(prefix).diff = high-low;
+                                console.log("DIFF FOR " + prefix + " IS " + existingData.get(prefix).diff);
 
+                            }
+                            if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){
+                                existingData.get(prefix).C7NL = price;
+                                let high = existingData.get(prefix).C7NL;
+                                let low = existingData.get(prefix).C3NL;
+                        
+                                existingData.get(prefix).diff = high-low;
+                                console.log("DIFF FOR " + prefix + " IS " + existingData.get(prefix).diff)
+                            } 
+                        }
+                    }
+
+                }
+                    
+            })
+        }
+    })
 }
 
 /**
@@ -317,6 +319,8 @@ async function writeFile(file, mode, map){
     let skuCol = null //32;
     let priceCol = null //37;
 
+    
+
     workbook.eachSheet((worksheet) => {
         worksheet.eachRow((row, rowNumber) => {
             if(rowNumber == 1){ // use row 1 to find the SKU and Price columns
@@ -335,7 +339,7 @@ async function writeFile(file, mode, map){
                 }
 
             }else{
-
+                
                 let SKU = row.values[skuCol]
                 let price = row.values[priceCol]
                 let lastIndex = null;
@@ -360,10 +364,37 @@ async function writeFile(file, mode, map){
                     // if the current item being processed is a custom variant then take the C3NL price stored in newPrice and add the diff for this item before saving
                     if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){ // if the code is one of the custom finishes, then set the price to the C3NL price plus the pre-calculated diff
                         //console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
-                        price = newPrice + (existingData.get(prefix).diff)
-                        price = checkOverrides(SKU, price); // check for overrides
+                        if(existingData.has(prefix)){
+                            newPrice = newPrice + (existingData.get(prefix).diff)
+                            newPrice = checkOverrides(SKU, newPrice); // check for overrides
+                            downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                        }
+                    }else{
+                        if(map.has(prefix)){ // try to find the corresponding item in the good price map 
+                            for (let item of map.get(prefix).info){ // if the prefix exists then add the row for each code
+
+                                if (!printedCodes.has(item)) {
+                                    console.log(
+                                        `%c ${JSON.stringify(item)}`,
+                                        "color: green; font-weight: bold;"
+                                    );
+
+                                    printedCodes.add(item);
+                                    newPrice = item.price; // set the newPrice to the price in the map
+                                    newPrice = checkOverrides(SKU, newPrice); // check for overrides
+                                    downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                                }
+
+                            //objIndex++;
+                            }
+                            // for(let i = 0; i< map.get(prefix).info.length; i++){
+                            //     price = map.get(prefix).info[i].price
+                            //     downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                            // }
+                            
+                        }
                     }
-                    downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet   
+                       
                 }
             }
         })
@@ -406,6 +437,7 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                                 price = parseInt(overridesMap.get(variantSKU))
                                 console.log("price for "+ variantSKU + " was overridden to "+ price)
                             }
+                            price = checkOverrides(variantSKU, price); // check for overrides
                             downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                         }
                     }else if(row.values[matCol] == "STEEL"){
@@ -416,6 +448,7 @@ async function parseReg(file, skuCol, priceCol, matCol, mode){
                                 price = parseInt(overridesMap.get(variantSKU))
                                 console.log("price for "+ variantSKU + " was overridden to "+ price)
                             }
+                            price = checkOverrides(variantSKU, price); // check for overrides
                             downloadSheet.addRow({sku: variantSKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                         }
                     }else if(row.values[matCol] == "IRON"){
@@ -462,6 +495,7 @@ async function parseCustom(file, skuCol, priceCol, mode){
                     console.log("price for "+ SKU + " was overridden to "+ price)
                 }
                 //console.log("SKU: " + SKU + " Price: " + price)
+                price = checkOverrides(SKU, price); // check for overrides
                 downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
             }
         })
