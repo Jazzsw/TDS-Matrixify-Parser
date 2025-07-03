@@ -28,6 +28,8 @@ let downloadSheet = null;
 
 document.getElementById("createFile").addEventListener('click', async function(){
 
+    document.getElementById("loading-overlay").style.display = "flex";
+
     let commandMode = document.getElementById("commandSelect").value
     let filePairings = []
     let dropDownElements = document.getElementsByClassName("filetypeDropdown")
@@ -96,6 +98,7 @@ document.getElementById("createFile").addEventListener('click', async function()
     }
 
     downloadFile(downloadSheet); //trigger the download of the file
+    document.getElementById("loading-overlay").style.display = "none";// hide the loading overlay
 
 })
 
@@ -109,6 +112,7 @@ document.getElementById("createFile").addEventListener('click', async function()
  *           price of each of the items in the file. The format of the map is:
  *           prefix : {
  *               info: [
+ *                   {code: code; price: price}
  *                   {code: code; price: price}
  *               ]
  *           }          
