@@ -2,6 +2,10 @@
 An advanced parser to take several sheets of different formats, in addition to user inputs 
 and generate and download a single Matrixify-readable file
 
+Designed and Implemented by Jazz Stocker-Witterick
+The Door Store Ltd
+July 2025
+
 
 # Functionality #
 
