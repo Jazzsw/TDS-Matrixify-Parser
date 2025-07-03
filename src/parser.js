@@ -9,7 +9,7 @@ const existingData = new Map(); // map for all existing data from the shopify ex
 const BM_map = new Map(); 
 var masterFile = null; //a file object that gets assigned to the file with all the shopify info [used to loop through to find all the custom available finishes]
 let undefinedCount = 0;
-const printedCodes = new Set(); // used to track the codes that have already been printed to the console
+//const printedCodes = new Set(); // used to track the codes that have already been printed to the console
 
 const codeMap = {
     "-PB": "-C3NL",
@@ -28,6 +28,8 @@ let downloadSheet = null;
 
 document.getElementById("createFile").addEventListener('click', async function(){
 
+    existingData.clear();
+    BM_map.clear();
     document.getElementById("loading-overlay").style.display = "flex";
 
     let commandMode = document.getElementById("commandSelect").value
@@ -382,10 +384,7 @@ async function writeFile(file, mode, map){
                             //console.log(JSON.stringify(map.get(prefix)));
                             for (let item of map.get(prefix).info){
                                 if(prefix + "-" + item.code == SKU){
-                                    console.log(
-                                        `%c ${SKU} + " "${JSON.stringify(item)}`,
-                                        "color: green; font-weight: bold;"
-                                    );
+                                    //console.log(`%c ${SKU} + " "${JSON.stringify(item)}`,"color: green; font-weight: bold;");
                                     newPrice = item.price; // set the newPrice to the price in the map
                                     newPrice = checkOverrides(SKU, newPrice); // check for overrides
                                     downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
