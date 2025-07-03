@@ -77,7 +77,7 @@ NOTE: when adding custom column numbers for sheets remember that hidden columns 
 count towards the column number.
 
 
-# ==================== Warnings and Troubleshooting ==================== #
+# Warnings and Troubleshooting #
 
 ## Warning 1 ##
 ### Warning Text ###
