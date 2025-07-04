@@ -15,8 +15,10 @@ By adding the full SKU and desired price to the price override section located
 on the left taskbar, you can override the price listed in the update file. 
 This is for items that you want to keep the same price or set as a constant 
 such as Keys. Given the sample data, you can try overriding using the SKU
+
     BM-1006-C3NL
 or 
+
     BM-1411-C7NL
 when testing the override, set the price to above 1000 to make it is visually
 obvious in the resulting file which ones have been affected.
