@@ -160,7 +160,7 @@ program will fail, do to an inability to calculate prices for custom finishes.
 
 ## Warning 6 ##
 ### Warning Text ###
-Required headers not found. Ensure 'Variant SKU' and 'Variant Price' exist within the Shopify export file
+    Required headers not found. Ensure 'Variant SKU' and 'Variant Price' exist within the Shopify export file
 
 ### Warning Reason ###
 This warning is thrown when attempting to read a Shopify Export file if the row titles' Variant SKU' and 'Variant Price'
