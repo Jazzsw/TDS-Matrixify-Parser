@@ -425,6 +425,8 @@ document.getElementById("addCustomFormat").addEventListener('click', function(){
     priceText.className = "textNode"
 
     delP.addEventListener('click', function(){//delete logic for the custom format
+        //customFormats.delete("custom_"+numberOfFormats)//remove the custom format from the customFormats map
+        //fileFormats.delete("custom_"+numberOfFormats)//remove the custom format from the fileFormats map
         parentDiv.remove()
     })
 
