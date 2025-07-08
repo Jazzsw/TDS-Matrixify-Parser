@@ -448,3 +448,6 @@ document.getElementById("addCustomFormat").addEventListener('click', function(){
 document.getElementById("panicBtn").addEventListener('click', function(){ // panic button to exit the app
     window.location.reload()
 });
+ document.getElementById("refreshBtn").addEventListener('click', function(){ // refresh button to reload the app
+    window.location.reload()
+});
