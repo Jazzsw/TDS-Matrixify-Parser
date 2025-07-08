@@ -443,3 +443,8 @@ document.getElementById("addCustomFormat").addEventListener('click', function(){
     customFormats.set(("custom_"+numberOfFormats), {"skuInput":skuInput, "priceInput": priceInput})// add the inputs to the customFormats map so they can be accessed later
 
 })
+
+
+document.getElementById("panicBtn").addEventListener('click', function(){ // panic button to exit the app
+    window.location.reload()
+});
