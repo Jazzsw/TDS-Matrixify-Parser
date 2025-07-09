@@ -249,16 +249,20 @@ async function handleExistingData(file){
                         code = SKU.slice(lastIndex);
                         prefix = SKU.slice(0,lastIndex);
                         SKU = replaceCode(prefix, code);
+
                 
-                        if(existingData.has(prefix) == false){ // if the prefix (ie the SKU) does not exist then create the first entry
+                        if(!existingData.has(prefix)){ // if the prefix (ie the SKU) does not exist then create the first entry
                             if(code == "-C3NL"){
-                                existingData.set(prefix, {'C3NL': price, 'C7NL': 0, 'diff': 0})
+                                //console.log("new prefix "+ prefix)      
+                                existingData.set(prefix, {'C3NL': price, 'C7NL': 0, 'diff': null})
                             }
                             if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){
-                                existingData.set(prefix, {'C3NL': 0, 'C7NL': price, 'diff': 0})
+                                //console.log("new prefix "+ prefix)    
+                                existingData.set(prefix, {'C3NL': 0, 'C7NL': price, 'diff': null})
                             }
                         }else{ // if the prefix exists then update the other value and the diff
-                            if(code == "-C3NL"){
+                            console.log("EXISTING PREFIX " + prefix);
+                            if(code == "-C3NL" && existingData.get(prefix).C3NL == 0){ // if the C3NL price is not set then set it
                                 existingData.get(prefix).C3NL = price;
                                 let high = existingData.get(prefix).C7NL;
                                 let low = existingData.get(prefix).C3NL;
@@ -267,7 +271,7 @@ async function handleExistingData(file){
                                 console.log("DIFF FOR " + prefix + " IS " + existingData.get(prefix).diff);
 
                             }
-                            if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){
+                            if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code) && existingData.get(prefix).C7NL == 0){
                                 existingData.get(prefix).C7NL = price;
                                 let high = existingData.get(prefix).C7NL;
                                 let low = existingData.get(prefix).C3NL;
@@ -355,6 +359,7 @@ async function writeFile(file, mode, map){
                         //console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
                         if(existingData.has(prefix)){
                             newPrice = newPrice + (existingData.get(prefix).diff)
+                            console.log(`%c ${SKU} +" " + existingData.get(prefix).diff + "" +${newPrice}`,"color: green; font-weight: bold;");
                             newPrice = checkOverrides(SKU, newPrice); // check for overrides
                             downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                         }
