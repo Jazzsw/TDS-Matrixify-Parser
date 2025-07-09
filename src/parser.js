@@ -261,7 +261,7 @@ async function handleExistingData(file){
                                 existingData.set(prefix, {'C3NL': 0, 'C7NL': price, 'diff': null})
                             }
                         }else{ // if the prefix exists then update the other value and the diff
-                            console.log("EXISTING PREFIX " + prefix);
+                            //console.log("EXISTING PREFIX " + prefix);
                             if(code == "-C3NL" && existingData.get(prefix).C3NL == 0){ // if the C3NL price is not set then set it
                                 existingData.get(prefix).C3NL = price;
                                 let high = existingData.get(prefix).C7NL;
