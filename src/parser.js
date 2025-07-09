@@ -9,7 +9,6 @@ const existingData = new Map(); // map for all existing data from the shopify ex
 const BM_map = new Map(); 
 var masterFile = null; //a file object that gets assigned to the file with all the shopify info [used to loop through to find all the custom available finishes]
 let undefinedCount = 0;
-//const printedCodes = new Set(); // used to track the codes that have already been printed to the console
 
 const codeMap = {
     "-PB": "-C3NL",
@@ -70,9 +69,7 @@ document.getElementById("createFile").addEventListener('click', async function()
     //First we must isolate and remove the current shopify data so we can find the custom finish cost diff for each item 
     for(let i = 0; i<filePairings.length; i++){  
         if(filePairings[i].type == "Current Shopify Data"){
-            //=====await handleExistingData(filePairings[i].file); //this function populates the existingData Map
             masterFile = filePairings[i].file // set the master file to the file marked Current Shopify Data
-            //====filePairings.splice(i,1)
         }
     }
 
@@ -93,7 +90,7 @@ document.getElementById("createFile").addEventListener('click', async function()
                 await writeFile(masterFile, commandMode, BM_map)
                 break;
             case "Reggio":
-                await parseReg(filePairings[i].file, fileFormats.get('Reggio').skuCol, fileFormats.get('Reggio').priceCol, fileFormats.get('Reggio').matCol, commandMode);//
+                await parseReg(filePairings[i].file, fileFormats.get('Reggio').skuCol, fileFormats.get('Reggio').priceCol, fileFormats.get('Reggio').matCol, commandMode);
                 break;
         }
 
@@ -184,8 +181,7 @@ function replaceCode(SKU, code){
     } else if (!code.startsWith("-")) {
         // Not a finish code, just return the base SKU
         return SKU;
-    } else {
-        // Unknown code – log it for debugging
+    } else { 
         // console.log(
         //     `%c SKU NOT CONVERTED ${SKU.concat(code)}`,
         //     "color: red; font-weight: bold;"
@@ -199,18 +195,6 @@ function arrToStr(array){
 }
 
 
-// document.getElementById("closeFormat").addEventListener('click', function(){
-//     let bmSKU = document.getElementById("BM_setSKU");
-//     let bmPrice = document.getElementById("BM_setPrice");
-
-//     window.electronAPI.setSetting('SKU', bmSKU).then(() => {
-//         alert('Setting saved!');
-//     });
-//     // settings.set('key', {
-//     //     'SKU': bmSKU.value,
-//     //     'PRICE': bmPrice.value
-//     // });
-// })
 
 
 /**
@@ -235,20 +219,17 @@ async function handleExistingData(file){
     let skuCol = null //32;
     let priceCol = null//37;
 
-    let foundC7NL = false;
 
     workbook.eachSheet((worksheet) => {
         if(worksheet.name.toLowerCase() == "products"){ // only process the master sheet
             worksheet.eachRow((row, rowNumber) => {
                 if(rowNumber == 1){
                     for(let i = 0; i<row.values.length; i++){
-                        if(row.values[i] == "Variant SKU"){
+                        if(row.values[i] == "Variant SKU"){//set the skuCol to the column with the header "Variant SKU"
                             skuCol = i;
-                            //console.log('SKU COL SET TO '+ skuCol)
                         }
-                        if(row.values[i] == "Variant Price"){
+                        if(row.values[i] == "Variant Price"){//set the priceCol to the column with the header "Variant Price"
                             priceCol = i;
-                            //console.log('PPrice COL SET TO '+ priceCol)
                         }
                     }
                 }else{
@@ -390,25 +371,6 @@ async function writeFile(file, mode, map){
                                     downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                                 }
                             }
-                                // for (let item of map.get(prefix).info){ // if the prefix exists then add the row for each code
-
-                                // if (!printedCodes.has(item)) {
-                                //     console.log(
-                                //         `%c ${SKU} + " "${JSON.stringify(item)}`,
-                                //         "color: green; font-weight: bold;"
-                                //     );
-                                //     //console.log(prefix + item.code)
-
-                                //     printedCodes.add(item);
-                                //     newPrice = item.price; // set the newPrice to the price in the map
-                                //     newPrice = checkOverrides(SKU, newPrice); // check for overrides
-                                //     downloadSheet.addRow({sku: (prefix + item.code), price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
-                                // }
-                            //}
-                            // for(let i = 0; i< map.get(prefix).info.length; i++){
-                            //     price = map.get(prefix).info[i].price
-                            //     downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
-                            // }
                             
                         }
                     }
@@ -502,7 +464,6 @@ async function parseCustom(file, skuCol, priceCol, mode){
             let SKU = row.values[skuCol] // find SKU
             let price = row.values[priceCol].result ?? row.values[priceCol]
 
-            //console.log("SKU: " + SKU + " Price: " + price)
 
             if(typeof SKU !== 'string'){
                 SKU = SKU.toString(); // convert to string if not already
@@ -512,7 +473,6 @@ async function parseCustom(file, skuCol, priceCol, mode){
                     price = parseInt(overridesMap.get(SKU))
                     console.log("price for "+ SKU + " was overridden to "+ price)
                 }
-                //console.log("SKU: " + SKU + " Price: " + price)
                 price = checkOverrides(SKU, price); // check for overrides
                 downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
             }
