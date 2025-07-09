@@ -3,6 +3,8 @@ const { ipcMain } = require('electron');
 const electron = require('electron')
 const settings = require('electron-settings');
 
+require('update-electron-app')
+
 if(require('electron-squirrel-startup')) {
   app.quit();
 }
@@ -29,11 +31,10 @@ if(require('electron-squirrel-startup')) {
   if (process.platform !== 'darwin') {
     win.setTitleBarOverlay({
     color: '#28282B',
-    symbolColor: "#ccc", // symbol color here
+    symbolColor: "#ccc",
     })
   }
 }
-
 
 
 //MacOS window managment  
