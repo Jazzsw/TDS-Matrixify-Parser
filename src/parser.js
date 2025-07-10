@@ -9,6 +9,7 @@ const existingData = new Map(); // map for all existing data from the shopify ex
 const BM_map = new Map(); 
 var masterFile = null; //a file object that gets assigned to the file with all the shopify info [used to loop through to find all the custom available finishes]
 let undefinedCount = 0;
+let brandArr =[];
 
 const codeMap = {
     "-PB": "-C3NL",
@@ -81,15 +82,17 @@ document.getElementById("createFile").addEventListener('click', async function()
         }
         switch (filePairings[i].type){
             case "B&M Singles":
+                brandArr.push("B&M");
                 await handleExistingData(masterFile);
                 if(undefinedCount > 10){
-                    alert("Warning: The program identified [" +undefinedCount+ "] undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met")
+                    //alert("Warning: The program identified [" +undefinedCount+ "] undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met")
                     undefinedCount = 0;
                 }
                 await parseBM(filePairings[i].file, fileFormats.get('B&M Singles').skuCol, fileFormats.get('B&M Singles').priceCol);//use the fileformat map from UI driver to get any possible override of the default file formats
                 await writeFile(masterFile, commandMode, BM_map)
                 break;
             case "Reggio":
+                brandArr.push("Reggio Registers");
                 await parseReg(filePairings[i].file, fileFormats.get('Reggio').skuCol, fileFormats.get('Reggio').priceCol, fileFormats.get('Reggio').matCol, commandMode);
                 break;
         }
@@ -247,7 +250,7 @@ async function handleExistingData(file){
                     //catch non-SKU entries
                     if (!SKU || typeof SKU !== 'string'){
                         undefinedCount++;
-                        console.log("ERROR SKU CAUGHT " + SKU+ rowNumber)
+                        //console.log("ERROR SKU CAUGHT " + SKU+ rowNumber)
                     } else{
                         lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
                         if(lastIndex <= 2){
@@ -276,7 +279,7 @@ async function handleExistingData(file){
                                 let low = existingData.get(prefix).C3NL;
                         
                                 existingData.get(prefix).diff = high-low;
-                                console.log("DIFF FOR " + prefix + " IS " + existingData.get(prefix).diff);
+                                //console.log("DIFF FOR " + prefix + " IS " + existingData.get(prefix).diff);
 
                             }
                             if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code) && existingData.get(prefix).C7NL == 0){
@@ -285,7 +288,7 @@ async function handleExistingData(file){
                                 let low = existingData.get(prefix).C3NL;
                         
                                 existingData.get(prefix).diff = high-low;
-                                console.log("DIFF FOR " + prefix + " IS " + existingData.get(prefix).diff)
+                                //console.log("DIFF FOR " + prefix + " IS " + existingData.get(prefix).diff)
                             } 
                         }
                     }
@@ -347,56 +350,69 @@ async function writeFile(file, mode, map){
                 let prefix = null;
                 let newPrice = null;
 
-                if(SKU != undefined){ // if the sku is valid continue
+                let brand = row.values[6]; // get the brand from the second column of the row
+                let formatValid = false;
 
-                    lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code
+                if(brandArr.includes(brand)){ // if the brand is in the brandArr then set the formatValid to true
+                    formatValid = true;
+                }
 
-                    if(lastIndex<= 2){// if the last index is the one after the BM- then it does not have a postfix and can just be added
-                        if(existingData.has(SKU)){
-                            console.log("---SKU without postfix: " + SKU + " price: " + price);
-                            price = checkOverrides(SKU, price); // check for overrides
-                            downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
-                        }
-                    }
+                if(SKU != undefined && formatValid){ // if the sku is valid continue
 
-                    code = SKU.slice(lastIndex);
-                    prefix = SKU.slice(0,lastIndex);
-                    SKU = replaceCode(prefix, code);
+                    if(SKU.startsWith("101-")){
+                        handleHardwareSet(SKU, price, mode, map, row.values[8]); // handle the hardware set separately (8 is tags)
+                    } else if(SKU.startsWith("100-")){
+                        console.log(" !! 100 Entry Hardware Skipped " + SKU + "!!");
+                    }else{
 
+                        lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code
 
-                    if(map.has(prefix)){ // try to find the corresponding item in the good price map 
-                        for(let i = 0; i< map.get(prefix).info.length; i++){
-                            if(map.get(prefix).info[i].code == "C3NL"){ // identify the base price using C3NL
-                                newPrice = map.get(prefix).info[i].price // set the newPrice to the C3NL price
+                        if(lastIndex<= 2){// if the last index is the one after the BM- then it does not have a postfix and can just be added
+                            if(existingData.has(SKU)){
+                                //console.log("---SKU without postfix: " + SKU + " price: " + price);
+                                price = checkOverrides(SKU, price); // check for overrides
+                                downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                             }
                         }
-                    }
 
-                    // if the current item being processed is a custom variant then take the C3NL price stored in newPrice and add the diff for this item before saving
-                    if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){ // if the code is one of the custom finishes, then set the price to the C3NL price plus the pre-calculated diff
-                        //console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
-                        if(existingData.has(prefix)){
-                            newPrice = newPrice + (existingData.get(prefix).diff)
-                            console.log(`%c ${SKU} +" " + existingData.get(prefix).diff + "" +${newPrice}`,"color: green; font-weight: bold;");
-                            newPrice = checkOverrides(SKU, newPrice); // check for overrides
-                            downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
-                        }
-                    }else{
+                        code = SKU.slice(lastIndex);
+                        prefix = SKU.slice(0,lastIndex);
+                        SKU = replaceCode(prefix, code);
+
+
                         if(map.has(prefix)){ // try to find the corresponding item in the good price map 
-                            let index = map.get(prefix).info.indexOf(prefix);
-                            //console.log(JSON.stringify(map.get(prefix)));
-                            for (let item of map.get(prefix).info){
-                                if(prefix + "-" + item.code == SKU){
-                                    //console.log(`%c ${SKU} + " "${JSON.stringify(item)}`,"color: green; font-weight: bold;");
-                                    newPrice = item.price; // set the newPrice to the price in the map
-                                    newPrice = checkOverrides(SKU, newPrice); // check for overrides
-                                    downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                            for(let i = 0; i< map.get(prefix).info.length; i++){
+                                if(map.get(prefix).info[i].code == "C3NL"){ // identify the base price using C3NL
+                                    newPrice = map.get(prefix).info[i].price // set the newPrice to the C3NL price
                                 }
                             }
-                            
                         }
-                    }
-                       
+
+                        // if the current item being processed is a custom variant then take the C3NL price stored in newPrice and add the diff for this item before saving
+                        if(["-C4NL", "-C7NL", "-C5NL", "-C10BNL"].includes(code)){ // if the code is one of the custom finishes, then set the price to the C3NL price plus the pre-calculated diff
+                            //console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
+                            if(existingData.has(prefix)){
+                                newPrice = newPrice + (existingData.get(prefix).diff)
+                                console.log(`%c ${SKU} +" " + existingData.get(prefix).diff + "" +${newPrice}`,"color: green; font-weight: bold;");
+                                newPrice = checkOverrides(SKU, newPrice); // check for overrides
+                                downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                            }
+                        }else{
+                            if(map.has(prefix)){ // try to find the corresponding item in the good price map 
+                                let index = map.get(prefix).info.indexOf(prefix);
+                                //console.log(JSON.stringify(map.get(prefix)));
+                                for (let item of map.get(prefix).info){
+                                    if(prefix + "-" + item.code == SKU){
+                                        //console.log(`%c ${SKU} + " "${JSON.stringify(item)}`,"color: green; font-weight: bold;");
+                                        newPrice = item.price; // set the newPrice to the price in the map
+                                        newPrice = checkOverrides(SKU, newPrice); // check for overrides
+                                        downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                                    }
+                                }
+                                
+                            }
+                        }
+                    }  
                 }
             }
         })
@@ -510,6 +526,12 @@ function checkOverrides(SKU, originalPrice){
         return price;
     }
     return originalPrice;
+}
+
+
+
+async function handleHardwareSet(SKU, price, mode, map, tags){
+    console.log("Handling hardware set for SKU: " + SKU + " and tags: " + tags);
 }
 
 
