@@ -13,7 +13,7 @@ let undefinedCount = 0;
 const codeMap = {
     "-PB": "-C3NL",
     "-OB": "-C10B",
-    "-AB": "-C5NL",
+    "-AB": "-C5",
     "-SB": "-C4NL",
     "-PN": "-C14",
     "-BN": "-C15",
@@ -132,6 +132,9 @@ async function parseBM(file, skuCol, priceCol){
     workbook.eachSheet((worksheet) => {
         worksheet.eachRow((row, rowNumber) => {
             let SKU = row.values[skuCol] // find SKU
+            if(typeof SKU !== 'string'){ // if the SKU is not a string then convert it to a string
+                SKU = SKU.toString();
+            }
             let lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
             let code = SKU.slice(lastIndex);
             let prefix = SKU.slice(0,lastIndex);
@@ -174,6 +177,7 @@ function replaceCode(SKU, code){
         alert("Invalid input to replaceCode:", { SKU, code });
         return SKU;
     }
+    
     const convertedCode = codeMap[code];
 
     if (convertedCode) {
@@ -246,6 +250,10 @@ async function handleExistingData(file){
                         console.log("ERROR SKU CAUGHT " + SKU+ rowNumber)
                     } else{
                         lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
+                        if(lastIndex <= 2){
+                            //console.log("++ Adding SKU without postfix: " + SKU);
+                            existingData.set(SKU, "no postfix code");
+                        }
                         code = SKU.slice(lastIndex);
                         prefix = SKU.slice(0,lastIndex);
                         SKU = replaceCode(prefix, code);
@@ -341,10 +349,20 @@ async function writeFile(file, mode, map){
 
                 if(SKU != undefined){ // if the sku is valid continue
 
-                    lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
+                    lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code
+
+                    if(lastIndex<= 2){// if the last index is the one after the BM- then it does not have a postfix and can just be added
+                        if(existingData.has(SKU)){
+                            console.log("---SKU without postfix: " + SKU + " price: " + price);
+                            price = checkOverrides(SKU, price); // check for overrides
+                            downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                        }
+                    }
+
                     code = SKU.slice(lastIndex);
                     prefix = SKU.slice(0,lastIndex);
                     SKU = replaceCode(prefix, code);
+
 
                     if(map.has(prefix)){ // try to find the corresponding item in the good price map 
                         for(let i = 0; i< map.get(prefix).info.length; i++){
@@ -365,7 +383,6 @@ async function writeFile(file, mode, map){
                         }
                     }else{
                         if(map.has(prefix)){ // try to find the corresponding item in the good price map 
-                            
                             let index = map.get(prefix).info.indexOf(prefix);
                             //console.log(JSON.stringify(map.get(prefix)));
                             for (let item of map.get(prefix).info){
