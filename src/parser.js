@@ -7,9 +7,11 @@ import { fileFormats } from './uiDriver.js';
 
 const existingData = new Map(); // map for all existing data from the shopify export file [used for finding the custom diff for each finish]
 const BM_map = new Map(); 
+const notSoldComponents = new Map(); // map for all the B&M components that are not sold on Shopify but are used in interior sets
 var masterFile = null; //a file object that gets assigned to the file with all the shopify info [used to loop through to find all the custom available finishes]
 let undefinedCount = 0;
-let brandArr =[];
+let brandArr = [];
+
 
 const codeMap = {
     "-PB": "-C3NL",
@@ -21,6 +23,24 @@ const codeMap = {
     "-PL": "-C3",
     "-BK": "-C19"
 };
+
+let validKnobSets = ["8746", "8745", "8755", "8754", "8753", "8752", "8851", "8852", "8853"]
+
+let validPlates = [   
+    "8864", "8866", 
+    "8862", "8865",
+    "8764-B", "8764-K",
+    "8767-B", "8767-K",
+    "8762-B", "8762-K",
+    "8763-B", "8763-K",
+    "8871",
+    "8876",
+    "8876",
+    "8741",
+    "8742",
+    "8873-B", "8873-D",
+    "8875-B"
+]
 
 const downloadWorkbook = new ExcelJS.Workbook();
 let downloadSheet = null;
@@ -150,7 +170,6 @@ async function parseBM(file, skuCol, priceCol){
             
             SKU = replaceCode(prefix, code);
             SKU = "BM-".concat(SKU);
-                
                 
             price = checkOverrides(SKU, price); // check for overrides
                 
@@ -531,7 +550,23 @@ function checkOverrides(SKU, originalPrice){
 
 
 async function handleHardwareSet(SKU, price, mode, map, tags){
-    console.log("Handling hardware set for SKU: " + SKU + " and tags: " + tags);
+
+    if(!tags.includes("entrance hardware")){
+        const intersectionKnobs = validKnobSets.filter(item => tags.includes(item));
+        const intersectionPlates = validPlates.filter(item => tags.includes(item));
+
+        if(intersectionKnobs.length == 0 || intersectionPlates.length == 0){
+            //THIS IS B&M WITH ANOTHER KNOB OR PLATE (KEEP COST AND ADD A TAG)
+        }
+        else{
+            let goodSKU = SKU.slice(SKU.lastIndexOf("-")+1)
+            if(BM_map.has(goodSKU)){
+                console.log("SKU already exists in BM_map: " + SKU);
+            }
+            console.log("Handling hardware set for SKU: " + SKU + " and tags: " + intersectionKnobs + " and " + intersectionPlates);
+        } 
+    }
+
 }
 
 
