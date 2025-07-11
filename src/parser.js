@@ -105,11 +105,6 @@ document.getElementById("createFile").addEventListener('click', async function()
             case "B&M Singles":
                 brandArr.push("B&M");
                 await handleExistingData(masterFile);
-                // for (let item of existingData.keys()){ 
-                //     if(item.startsWith("101-")){
-                //         console.log("Found B&M item with code: " + item + " and price diff: " + existingData.get(item).diff);
-                //     }
-                // }
                 if(undefinedCount > 10){
                     //alert("Warning: The program identified [" +undefinedCount+ "] undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met")
                     undefinedCount = 0;
