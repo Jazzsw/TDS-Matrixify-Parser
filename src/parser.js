@@ -612,13 +612,10 @@ if(!hardwareSet.includes(SKU)){
                     price += 2 * item.price; // set the price to the price in the map
                 }
             }
-            tagsArr.push(knobSKU)
-            tagsArr.push(plateSKU);
 
             price = checkOverrides(SKU, price); // check for overrides
             downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
 
-            tagsArr.shift(); // remove the first element from the array (the knobSKU)
             
             //console.log(SKU + " Hardware Set Knob: " + knobSKU + " Plate: " + plateSKU + " Variant: " + variant + " Price: " + price + " diff: " + existingData.get(cutSKU).diff);
 

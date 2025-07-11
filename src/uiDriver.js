@@ -2,7 +2,7 @@
 import ExcelJS from 'https://cdn.jsdelivr.net/npm/exceljs/+esm';
 
 // Arrays to store bulk update tags and price overrides
-export var tagsArr = [] // array of strings (tags)
+export var tagsArr = ["AutoUpdated"] // array of strings (tags)
 export var overridesMap = new Map () // map of overrides matching the sku to the override price
 export var fileObjList = [] // array of each file object
 export var fileFormats = new Map() // save the SKU and price columns for each supported file type
