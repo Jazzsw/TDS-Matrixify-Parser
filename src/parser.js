@@ -11,6 +11,7 @@ const notSoldComponents = new Map(); // map for all the B&M components that are 
 var masterFile = null; //a file object that gets assigned to the file with all the shopify info [used to loop through to find all the custom available finishes]
 let undefinedCount = 0;
 let brandArr = [];
+let hardwareSet = [];
 
 
 const codeMap = {
@@ -555,10 +556,11 @@ function checkOverrides(SKU, originalPrice){
 
 
 async function handleHardwareSet(SKU, mode, map, tags){
-
+if(!hardwareSet.includes(SKU)){
     if(!tags.includes("entrance hardware")){
         const intersectionKnobs = validKnobSets.filter(item => tags.includes(item));
         const intersectionPlates = validPlates.filter(item => tags.includes(item));
+        let cutSKU = SKU.slice(0, SKU.lastIndexOf("-"));
 
         if(intersectionKnobs.length == 0 || intersectionPlates.length == 0){
             //THIS IS B&M WITH ANOTHER KNOB OR PLATE (KEEP COST AND ADD A TAG)
@@ -566,7 +568,19 @@ async function handleHardwareSet(SKU, mode, map, tags){
         else{
 
             if(intersectionPlates.length != 1){
-                intersectionPlates.shift()
+                if(cutSKU.endsWith("K")){
+                    for (let item of intersectionPlates){
+                        if(item.endsWith("B")){
+                            intersectionPlates.splice(intersectionPlates.indexOf(item), 1); // remove the item from the array
+                        }
+                    }
+                }else{
+                    for (let item of intersectionPlates){
+                        if(item.endsWith("K")){
+                            intersectionPlates.splice(intersectionPlates.indexOf(item), 1); // remove the item from the array
+                        }
+                    }
+                }
             }
 
             if(intersectionKnobs.length != 1 || intersectionPlates.length != 1){
@@ -580,28 +594,38 @@ async function handleHardwareSet(SKU, mode, map, tags){
             let price = 0;
 
             for (let item of BM_map.get(knobSKU).info){
-                if(item.code == variant){
+                if(["C4NL", "C5NL", "C7NL", "C10BNL"].includes(variant)){
+                    if(item.code == "C3NL"){
+                        price += item.price + 25 // set the price to the price in the map plus the $25 charge
+                    }
+                } else if(item.code == variant){
                     price += item.price; // set the price to the price in the map
                 }
             }
 
             for (let item of BM_map.get(plateSKU).info){
-                if(item.code == variant){
+                if(["C4NL", "C5NL", "C7NL", "C10BNL"].includes(variant)){
+                    if(item.code == "C3NL"){
+                        price += (2 * item.price) // no 25 charge bc it is all one set, just 1 charge
+                    }
+                } else if(item.code == variant){
                     price += 2 * item.price; // set the price to the price in the map
                 }
             }
+            tagsArr.push(knobSKU)
+            tagsArr.push(plateSKU);
 
+            price = checkOverrides(SKU, price); // check for overrides
+            downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+
+            tagsArr.shift(); // remove the first element from the array (the knobSKU)
             
-            let cutSKU = SKU.slice(0, SKU.lastIndexOf("-"));
-            console.log("SKU: "+ cutSKU)
-            if(existingData.has(cutSKU)){
-                console.log("SKU "+ cutSKU + " Diff" + existingData.get(cutSKU).diff + " BASE Price: " + existingData.get(cutSKU).C3NL);
-            }
+            //console.log(SKU + " Hardware Set Knob: " + knobSKU + " Plate: " + plateSKU + " Variant: " + variant + " Price: " + price + " diff: " + existingData.get(cutSKU).diff);
 
-            console.log("Hardware Set Knob: " + knobSKU + " Plate: " + plateSKU + " Variant: " + variant + " Price: " + price);
-            // console.log("Handling hardware set for SKU: " + SKU + " and tags: " + intersectionKnobs + " and " + intersectionPlates);
         } 
     }
+    hardwareSet.push(SKU); // add the SKU to the hardwareSet to avoid duplicates
+}
 
 }
 
