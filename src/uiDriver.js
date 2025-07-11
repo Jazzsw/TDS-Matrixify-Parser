@@ -9,11 +9,11 @@ export var fileFormats = new Map() // save the SKU and price columns for each su
 
 let customFormats = new Map();
 let numberOfFormats = 0;
-let options = ["Current Shopify Data", "B&M Singles", "Reggio"] //array of dropdown options
+let options = ["Current Shopify Data", "B&M", "Reggio"] //array of dropdown options
 
 // Price Override
 let overridesCount = 0; // counter to tell when overrides are empty for display
-fileFormats.set('B&M Singles', {"skuCol":1, "priceCol": 6})//push default values for B&M file structure
+fileFormats.set('B&M', {"skuCol":1, "priceCol": 6})//push default values for B&M file structure
 fileFormats.set('Reggio', {"skuCol":2, "priceCol": 20, "matCol": 6})//push default values for Reggio file structure
 
 const overrideNode = document.getElementById("overridePrice");
@@ -361,15 +361,15 @@ document.getElementById("closeFormat").addEventListener('click', function(){
     let RG_setMat = document.getElementById("RG_setMaterial")
 
 
-    if(fileFormats.has('B&M Singles')){
-        fileFormats.delete('B&M Singles');
+    if(fileFormats.has('B&M')){
+        fileFormats.delete('B&M');
     }
 
     if(fileFormats.has('Reggio')){
         fileFormats.delete('Reggio');
     }
     fileFormats.set('Reggio', {"skuCol":RG_setSKU.value, "priceCol": RG_setPrice.value, "matCol": RG_setMat.value})//reset Reggio file structure
-    fileFormats.set('B&M Singles', {"skuCol":BM_setSKU.value, "priceCol": BM_setPrice.value})
+    fileFormats.set('B&M', {"skuCol":BM_setSKU.value, "priceCol": BM_setPrice.value})
 
     // Loop through custom formats and add them to the fileFormats map
     for(const [key, val] of customFormats){

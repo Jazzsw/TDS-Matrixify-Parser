@@ -76,7 +76,7 @@ document.getElementById("createFile").addEventListener('click', async function()
         if(element.value == "Current Shopify Data"){ // if the file is the current shopify data then set the flag to false
             shopifyFlag = true;
         }
-        if(element.value == "B&M Singles"){ // if the file is the B&M Singles then set the flag to false
+        if(element.value == "B&M"){ // if the file is the B&M Singles then set the flag to false
             BMFlag = true;
         }
         index++;
@@ -102,14 +102,14 @@ document.getElementById("createFile").addEventListener('click', async function()
             await parseCustom(filePairings[i].file, fileFormats.get(filePairings[i].type).skuCol, fileFormats.get(filePairings[i].type).priceCol, commandMode)
         }
         switch (filePairings[i].type){
-            case "B&M Singles":
+            case "B&M":
                 brandArr.push("B&M");
                 await handleExistingData(masterFile);
                 if(undefinedCount > 10){
                     //alert("Warning: The program identified [" +undefinedCount+ "] undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met")
                     undefinedCount = 0;
                 }
-                await parseBM(filePairings[i].file, fileFormats.get('B&M Singles').skuCol, fileFormats.get('B&M Singles').priceCol);//use the fileformat map from UI driver to get any possible override of the default file formats
+                await parseBM(filePairings[i].file, fileFormats.get('B&M').skuCol, fileFormats.get('B&M').priceCol);//use the fileformat map from UI driver to get any possible override of the default file formats
                 await writeFile(masterFile, commandMode, BM_map)
                 break;
             case "Reggio":
@@ -380,9 +380,9 @@ async function writeFile(file, mode, map){
                 if(SKU != undefined && formatValid){ // if the sku is valid continue
 
                     if(SKU.startsWith("101-")){
-                        handleHardwareSet(SKU, mode, map, row.values[8]); // handle the hardware set separately (8 is tags)
+                        handleHardwareSet(SKU, mode, price, row.values[8]); // handle the hardware set separately (8 is tags)
                     } else if(SKU.startsWith("100-")){
-                        console.log(" !! 100 Entry Hardware Skipped " + SKU + "!!");
+                       // console.log(" !! 100 Entry Hardware Skipped " + SKU + "!!");
                     }else{
 
                         lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code
@@ -413,7 +413,7 @@ async function writeFile(file, mode, map){
                             //console.log("SKU: "+ prefix + "; existingData: "+ JSON.stringify(existingData.get(prefix))+ "Price: " + newPrice + "DIFF: " + existingData.get(prefix).diff )
                             if(existingData.has(prefix)){
                                 newPrice = newPrice + (existingData.get(prefix).diff)
-                                console.log(`%c ${SKU} +" " + existingData.get(prefix).diff + "" +${newPrice}`,"color: green; font-weight: bold;");
+                                //console.log(`%c ${SKU} +" " + ${existingData.get(prefix).diff} + "" +${newPrice}`,"color: green; font-weight: bold;");
                                 newPrice = checkOverrides(SKU, newPrice); // check for overrides
                                 downloadSheet.addRow({sku: SKU, price: newPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
                             }
@@ -550,7 +550,7 @@ function checkOverrides(SKU, originalPrice){
 
 
 
-async function handleHardwareSet(SKU, mode, map, tags){
+async function handleHardwareSet(SKU, mode, originalPrice, tags){
 if(!hardwareSet.includes(SKU)){
     if(!tags.includes("entrance hardware")){
         const intersectionKnobs = validKnobSets.filter(item => tags.includes(item));
@@ -559,6 +559,11 @@ if(!hardwareSet.includes(SKU)){
 
         if(intersectionKnobs.length == 0 || intersectionPlates.length == 0){
             //THIS IS B&M WITH ANOTHER KNOB OR PLATE (KEEP COST AND ADD A TAG)
+            let tempTagsArr = tagsArr.slice(); // create a copy of the tagsArr
+            tempTagsArr.push("B&M Mix");
+            let price = checkOverrides(SKU, originalPrice); // check for overrides
+            downloadSheet.addRow({sku: SKU, price: originalPrice, command: mode, tagscommand: "MERGE", tags: arrToStr(tempTagsArr)}); //add the row to
+
         }
         else{
 
@@ -578,10 +583,9 @@ if(!hardwareSet.includes(SKU)){
                 }
             }
 
-            if(intersectionKnobs.length != 1 || intersectionPlates.length != 1){
-                console.log("knobs: " + intersectionKnobs + " plates: " + intersectionPlates);
-                return;
-            }
+            // if(intersectionKnobs.length != 1 || intersectionPlates.length != 1){
+            //     console.log("knobs: " + intersectionKnobs + " plates: " + intersectionPlates);
+            // }
 
             let knobSKU = "BM-" + intersectionKnobs[0];
             let plateSKU = "BM-" + intersectionPlates[0];
