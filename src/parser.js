@@ -104,6 +104,11 @@ document.getElementById("createFile").addEventListener('click', async function()
             case "B&M Singles":
                 brandArr.push("B&M");
                 await handleExistingData(masterFile);
+                // for (let item of existingData.keys()){ 
+                //     if(item.startsWith("101-")){
+                //         console.log("Found B&M item with code: " + item + " and price diff: " + existingData.get(item).diff);
+                //     }
+                // }
                 if(undefinedCount > 10){
                     //alert("Warning: The program identified [" +undefinedCount+ "] undefined SKU values identified. This is likely due to a format error. Check that your file uploads are properly specified using the dropdown, and that the file format requirement are met")
                     undefinedCount = 0;
@@ -379,7 +384,7 @@ async function writeFile(file, mode, map){
                 if(SKU != undefined && formatValid){ // if the sku is valid continue
 
                     if(SKU.startsWith("101-")){
-                        handleHardwareSet(SKU, price, mode, map, row.values[8]); // handle the hardware set separately (8 is tags)
+                        handleHardwareSet(SKU, mode, map, row.values[8]); // handle the hardware set separately (8 is tags)
                     } else if(SKU.startsWith("100-")){
                         console.log(" !! 100 Entry Hardware Skipped " + SKU + "!!");
                     }else{
@@ -549,7 +554,7 @@ function checkOverrides(SKU, originalPrice){
 
 
 
-async function handleHardwareSet(SKU, price, mode, map, tags){
+async function handleHardwareSet(SKU, mode, map, tags){
 
     if(!tags.includes("entrance hardware")){
         const intersectionKnobs = validKnobSets.filter(item => tags.includes(item));
@@ -559,11 +564,42 @@ async function handleHardwareSet(SKU, price, mode, map, tags){
             //THIS IS B&M WITH ANOTHER KNOB OR PLATE (KEEP COST AND ADD A TAG)
         }
         else{
-            let goodSKU = SKU.slice(SKU.lastIndexOf("-")+1)
-            if(BM_map.has(goodSKU)){
-                console.log("SKU already exists in BM_map: " + SKU);
+
+            if(intersectionPlates.length != 1){
+                intersectionPlates.shift()
             }
-            console.log("Handling hardware set for SKU: " + SKU + " and tags: " + intersectionKnobs + " and " + intersectionPlates);
+
+            if(intersectionKnobs.length != 1 || intersectionPlates.length != 1){
+                console.log("knobs: " + intersectionKnobs + " plates: " + intersectionPlates);
+                return;
+            }
+
+            let knobSKU = "BM-" + intersectionKnobs[0];
+            let plateSKU = "BM-" + intersectionPlates[0];
+            let variant = SKU.slice(SKU.lastIndexOf("-")+1);
+            let price = 0;
+
+            for (let item of BM_map.get(knobSKU).info){
+                if(item.code == variant){
+                    price += item.price; // set the price to the price in the map
+                }
+            }
+
+            for (let item of BM_map.get(plateSKU).info){
+                if(item.code == variant){
+                    price += 2 * item.price; // set the price to the price in the map
+                }
+            }
+
+            
+            let cutSKU = SKU.slice(0, SKU.lastIndexOf("-"));
+            console.log("SKU: "+ cutSKU)
+            if(existingData.has(cutSKU)){
+                console.log("SKU "+ cutSKU + " Diff" + existingData.get(cutSKU).diff + " BASE Price: " + existingData.get(cutSKU).C3NL);
+            }
+
+            console.log("Hardware Set Knob: " + knobSKU + " Plate: " + plateSKU + " Variant: " + variant + " Price: " + price);
+            // console.log("Handling hardware set for SKU: " + SKU + " and tags: " + intersectionKnobs + " and " + intersectionPlates);
         } 
     }
 
