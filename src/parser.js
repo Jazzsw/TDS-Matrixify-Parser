@@ -64,7 +64,7 @@ document.getElementById("createFile").addEventListener('click', async function()
         { header: 'Variant SKU', key: 'sku', width: 30 },
         { header: 'Variant Price', key: 'price', width: 10 },
         { header: 'Command', key: 'command', width: 10},
-        { header: 'Tags', key: 'tags', width: 10},
+        { header: 'Tags', key: 'tags', width: 20},
         { header: 'Tags Command', key: 'tagscommand', width: 15}
     ];
     let shopifyFlag = false;
@@ -592,6 +592,8 @@ if(!hardwareSet.includes(SKU)){
             let variant = SKU.slice(SKU.lastIndexOf("-")+1);
             let price = 0;
 
+            
+
             for (let item of BM_map.get(knobSKU).info){
                 if(["C4NL", "C5NL", "C7NL", "C10BNL"].includes(variant)){
                     if(item.code == "C3NL"){
@@ -602,20 +604,49 @@ if(!hardwareSet.includes(SKU)){
                 }
             }
 
-            for (let item of BM_map.get(plateSKU).info){
-                if(["C4NL", "C5NL", "C7NL", "C10BNL"].includes(variant)){
-                    if(item.code == "C3NL"){
-                        price += (2 * item.price) // no 25 charge bc it is all one set, just 1 charge
+            if(plateSKU.startsWith("BM-8873")){// special case for the 8873 plates which require one of each B and D plates
+                let plateOne = "BM-8873-B";
+                let plateTwo = "BM-8873-D";
+                for (let item of BM_map.get(plateOne).info){
+                    if(["C4NL", "C5NL", "C7NL", "C10BNL"].includes(variant)){
+                        if(item.code == "C3NL"){
+                            price += (item.price) // no 25 charge bc it is all one set, just 1 charge
+                        }
+                    } else if(item.code == variant){
+                        price += item.price; // set the price to the price in the map
                     }
-                } else if(item.code == variant){
-                    price += 2 * item.price; // set the price to the price in the map
+                }
+                for (let item of BM_map.get(plateTwo).info){
+                    if(["C4NL", "C5NL", "C7NL", "C10BNL"].includes(variant)){
+                        if(item.code == "C3NL"){
+                            price += (item.price) // no 25 charge bc it is all one set, just 1 charge
+                        }
+                    } else if(item.code == variant){
+                        price += item.price; // set the price to the price in the map
+                    }
+                }
+                
+            } else {
+
+                for (let item of BM_map.get(plateSKU).info){
+                    if(["C4NL", "C5NL", "C7NL", "C10BNL"].includes(variant)){
+                        if(item.code == "C3NL"){
+                            price += (2 * item.price) // no 25 charge bc it is all one set, just 1 charge
+                        }
+                    } else if(item.code == variant){
+                        price += 2 * item.price; // set the price to the price in the map
+                    }
                 }
             }
+
+            tagsArr.push(knobSKU)
+            tagsArr.push(plateSKU)
 
             price = checkOverrides(SKU, price); // check for overrides
             downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
 
-            
+            tagsArr.pop();
+            tagsArr.pop();
             //console.log(SKU + " Hardware Set Knob: " + knobSKU + " Plate: " + plateSKU + " Variant: " + variant + " Price: " + price + " diff: " + existingData.get(cutSKU).diff);
 
         } 
