@@ -3,9 +3,13 @@ const { ipcMain } = require('electron');
 const electron = require('electron')
 const settings = require('electron-settings');
 
-require('update-electron-app')
+const { updateElectronApp } = require('update-electron-app')
+  
+if (process.platform !== 'darwin') {
+  updateElectronApp()
+}
 
-if(require('electron-squirrel-startup')) {
+if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
