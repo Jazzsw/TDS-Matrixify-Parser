@@ -95,6 +95,12 @@ document.getElementById("createFile").addEventListener('click', async function()
         }
     }
 
+    for(let i = 0; i<filePairings.length; i++){
+        if(filePairings[i].type == "Overrides"){
+            await populateOverrides(filePairings[i].file); // populate the overrides map with the overrides file
+        }
+    }
+
 
     //Loop through the files and process them based on their dropdown classification 
     for (let i = 0; i<filePairings.length; i++){
@@ -658,6 +664,31 @@ if(!hardwareSet.includes(SKU)){
     }
     hardwareSet.push(SKU); // add the SKU to the hardwareSet to avoid duplicates
 }
+
+}
+
+
+async function populateOverrides(file){
+    const buffer = await file.arrayBuffer();
+    const workbook = new ExcelJS.Workbook();
+
+    try{
+        await workbook.xlsx.load(buffer);
+    }catch(e){
+        alert("ERROR: Write file failed to load.");
+        return;
+    }
+
+    let skuCol = 1;
+    let priceCol = 2;
+
+    workbook.eachSheet((worksheet) => {
+        worksheet.eachRow((row, rowNumber) => {
+            let SKU = row.values[skuCol] // find SKU
+            let price = row.values[priceCol]
+            overridesMap.set(SKU, price); // set the SKU and price in the overrides map
+        });
+    });
 
 }
 

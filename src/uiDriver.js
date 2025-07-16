@@ -9,7 +9,7 @@ export var fileFormats = new Map() // save the SKU and price columns for each su
 
 let customFormats = new Map();
 let numberOfFormats = 0;
-let options = ["Current Shopify Data", "B&M", "Reggio"] //array of dropdown options
+let options = ["Current Shopify Data", "B&M", "Reggio", "Overrides"] //array of dropdown options
 
 // Price Override
 let overridesCount = 0; // counter to tell when overrides are empty for display
