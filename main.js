@@ -13,6 +13,8 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+app.setAppUserModelId("com.squirrel.AppName.AppName");
+
 //Simple window creation with browserWindow loading layout from index 
   const createWindow = () => {
   const win = new BrowserWindow({//define window size
