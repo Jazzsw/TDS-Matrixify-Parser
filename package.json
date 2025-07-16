@@ -1,13 +1,13 @@
 {
   "name": "SheetForge",
-  "version": "1.2.0",
+  "version": "1.2.2",
   "description": "Parser for Matrixify",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
-    "make": "electron-forge make"
+    "make": "electron-forge make --mac --win"
   },
   "repository": {
     "type": "git",
