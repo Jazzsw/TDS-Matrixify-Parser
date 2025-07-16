@@ -6,6 +6,7 @@ const settings = require('electron-settings');
 const { updateElectronApp } = require('update-electron-app')
   
 if (process.platform !== 'darwin') {
+  alert("checking for updates");
   updateElectronApp()
 }
 
