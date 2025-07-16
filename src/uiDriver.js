@@ -51,7 +51,7 @@ overrideNode.addEventListener("keyup", function(event) { // detect enter key
                 newElement.remove();
                 overridesCount--
                 if(overridesCount == 0){//if there are no overrides, show the placeholder text
-                    emptyText.style.display = "block"
+                    emptyText.style.display = "block";
                 }
                 
             });
@@ -78,7 +78,7 @@ document.getElementById("overrideBtn").addEventListener('click', function(){
 
     if(code != "" && price != ""){ // Only work if there is content in the inputs
 
-        //let overrideObj = {"code": code, "price": price} //create object based on inputs
+        //let overrideObj = {"code": code, "price": price} 
         //overridesMap.push(overrideObj) //push object to array
         overridesMap.set(code, price)
 
