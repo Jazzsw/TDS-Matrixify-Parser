@@ -177,6 +177,11 @@ async function parseBM(file, skuCol, priceCol){
             //required to get the proper postfix (ie. C3NL <- PB)
             let goodCode = SKU.slice(SKU.lastIndexOf("-")+1);
             let goodPrefix = "BM-".concat(prefix);
+            if(goodPrefix.endsWith("W")){
+                goodPrefix = goodPrefix.slice(0, -2); // remove the W from the end of the prefix
+                goodPrefix = goodPrefix + "W"; // add the W back to the end of the prefix
+
+            }
             if(BM_map.has(goodPrefix)){ // if the prefix exists then simply push a variation code to the info array
                 BM_map.get(goodPrefix).info.push({'code': goodCode, 'price': price});
             } else{ // if the prefix does not exist then create a new object in the Map
