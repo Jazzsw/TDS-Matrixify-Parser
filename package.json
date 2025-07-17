@@ -9,9 +9,10 @@
     "package": "electron-forge package",
     "make": "electron-forge make --mac --win"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Jazzsw/TDS-Matrixify-Parser.git"
+  "repository": "https://github.com/Jazzsw/TDS-Matrixify-Parser.git",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
   },
   "author": "Jazz Stocker-Witterick",
   "license": "ISC",
