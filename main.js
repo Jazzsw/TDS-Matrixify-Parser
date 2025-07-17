@@ -4,8 +4,31 @@ const electron = require('electron')
 const settings = require('electron-settings');
 const { autoUpdater, AppUpdater } = require('electron-updater');
 
-autoUpdater.autoDownload = true; // Enable auto download of updates
-autoUpdater.autoInstallOnAppQuit = true; // Install updates on app quit
+const { updateElectronApp } = require('update-electron-app');
+updateElectronApp(); // <- calling it with default config
+
+
+// autoUpdater.autoDownload = true; // Enable auto download of updates
+// autoUpdater.autoInstallOnAppQuit = true; // Install updates on app quit
+
+
+autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
+  const dialogOpts = {
+    type: 'info',
+    buttons: ['Restart', 'Later'],
+    title: 'Application Update',
+    message: process.platform === 'win32' ? releaseNotes : releaseName,
+    detail:
+      'A new version has been downloaded. Restart the application to apply the updates.'
+  }
+
+  dialog.showMessageBox(dialogOpts).then((returnValue) => {
+    if (returnValue.response === 0) autoUpdater.quitAndInstall()
+  })
+})
+
+
+
 
 // const { updateElectronApp } = require('update-electron-app')
   
@@ -13,9 +36,7 @@ autoUpdater.autoInstallOnAppQuit = true; // Install updates on app quit
 //   updateElectronApp()
 // }
 
-autoUpdater.on('update-available', (info) => {
-  autoUpdater.downloadUpdate();
-})
+
 
 // document.getElementById('verDisplay').innerText = `Version: ${app.getVersion()}`;
 
@@ -63,7 +84,6 @@ app.whenReady().then(() => {
     }
   })
 
-  autoUpdater.checkForUpdates();
 })
 
 //Windows and Linux operating system process killer when windows are closed
