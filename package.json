@@ -1,6 +1,6 @@
 {
   "name": "SheetForge",
-  "version": "1.2.5",
+  "version": "1.2.6",
   "description": "Parser for Matrixify",
   "main": "main.js",
   "scripts": {
@@ -10,7 +10,7 @@
     "make": "electron-forge make --mac --win",
     "dist": "electron-builder"
   },
-  "repository": "https://github.com/Jazzsw/TDS-Matrixify-Parser.git",
+  "repository": "https://github.com/Jazzsw/TDS-Matrixify-Parser",
   "publish": {
     "provider": "github",
     "releaseType": "release"
