@@ -7,39 +7,7 @@ const { autoUpdater, AppUpdater } = require('electron-updater');
 const { updateElectronApp } = require('update-electron-app');
 updateElectronApp();
 console.log("app version: " + app.getVersion());
-// const updateElectronApp = updateElectronAppRaw.default || updateElectronAppRaw;
-// updateElectronApp();
 
-
-
-
-// autoUpdater.autoDownload = true; // Enable auto download of updates
-// autoUpdater.autoInstallOnAppQuit = true; // Install updates on app quit
-
-
-// autoUpdater.on('update-downloaded', (event, releaseNotes, releaseName) => {
-//   const dialogOpts = {
-//     type: 'info',
-//     buttons: ['Restart', 'Later'],
-//     title: 'Application Update',
-//     message: process.platform === 'win32' ? releaseNotes : releaseName,
-//     detail:
-//       'A new version has been downloaded. Restart the application to apply the updates.'
-//   }
-
-//   dialog.showMessageBox(dialogOpts).then((returnValue) => {
-//     if (returnValue.response === 0) autoUpdater.quitAndInstall()
-//   })
-// })
-
-
-
-
-// const { updateElectronApp } = require('update-electron-app')
-  
-// if (process.platform !== 'darwin') {
-//   updateElectronApp()
-// }
 
 
 
@@ -65,10 +33,6 @@ if (require('electron-squirrel-startup')) {
       nodeIntegration: false,
     },
   })
-
-  win.webContents.openDevTools();
-
-  console.log("Main process is running");
   
 
   win.loadFile('src/index.html')
