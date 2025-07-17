@@ -4,8 +4,8 @@ const electron = require('electron')
 const settings = require('electron-settings');
 const { autoUpdater, AppUpdater } = require('electron-updater');
 
-autoUpdater.autoDownload = false; // Disable auto download of updates
-autoUpdater.autoInstallOnAppQuit = true; // Install updates on app quit 
+autoUpdater.autoDownload = true; // Enable auto download of updates
+autoUpdater.autoInstallOnAppQuit = true; // Install updates on app quit
 
 // const { updateElectronApp } = require('update-electron-app')
   
@@ -17,7 +17,7 @@ autoUpdater.on('update-available', (info) => {
   autoUpdater.downloadUpdate();
 })
 
-
+// document.getElementById('verDisplay').innerText = `Version: ${app.getVersion()}`;
 
 if (require('electron-squirrel-startup')) {
   app.quit();
