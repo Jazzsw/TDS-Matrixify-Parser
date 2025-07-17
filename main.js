@@ -2,18 +2,28 @@ const { app, BrowserWindow } = require('electron/main')
 const { ipcMain } = require('electron');
 const electron = require('electron')
 const settings = require('electron-settings');
+const { autoUpdater, AppUpdater } = require('electron-updater');
 
-const { updateElectronApp } = require('update-electron-app')
+autoUpdater.autoDownload = false; // Disable auto download of updates
+autoUpdater.autoInstallOnAppQuit = true; // Install updates on app quit 
+
+// const { updateElectronApp } = require('update-electron-app')
   
-if (process.platform !== 'darwin') {
-  updateElectronApp()
-}
+// if (process.platform !== 'darwin') {
+//   updateElectronApp()
+// }
+
+autoUpdater.on('update-available', (info) => {
+  autoUpdater.downloadUpdate();
+})
+
+
 
 if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
-app.setAppUserModelId("com.squirrel.AppName.AppName");
+// app.setAppUserModelId("com.squirrel.AppName.AppName");
 
 //Simple window creation with browserWindow loading layout from index 
   const createWindow = () => {
@@ -52,6 +62,8 @@ app.whenReady().then(() => {
       createWindow()
     }
   })
+
+  autoUpdater.checkForUpdates();
 })
 
 //Windows and Linux operating system process killer when windows are closed

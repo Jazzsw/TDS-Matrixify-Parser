@@ -1,18 +1,29 @@
 {
   "name": "SheetForge",
-  "version": "1.2.2",
+  "version": "1.2.5",
   "description": "Parser for Matrixify",
   "main": "main.js",
   "scripts": {
     "start": "electron-forge start",
     "test": "echo \"Error: no test specified\" && exit 1",
     "package": "electron-forge package",
-    "make": "electron-forge make --mac --win"
+    "make": "electron-forge make --mac --win",
+    "dist": "electron-builder"
   },
   "repository": "https://github.com/Jazzsw/TDS-Matrixify-Parser.git",
   "publish": {
     "provider": "github",
     "releaseType": "release"
+  },
+  "build": {
+    "appId": "com.jazzsw.sheetforge",
+    "productName": "SheetForge",
+    "win": {
+      "target": "nsis"
+    },
+    "directories": {
+      "output": "dist"
+    }
   },
   "author": "Jazz Stocker-Witterick",
   "license": "ISC",
@@ -32,7 +43,9 @@
     "@electron/fuses": "^1.8.0",
     "autoprefixer": "^10.4.21",
     "electron": "^36.4.0",
+    "electron-builder": "^26.0.12",
     "electron-packager": "^17.1.2",
+    "npm-builder": "^1.3.3",
     "postcss": "^8.5.5",
     "tailwindcss": "^4.1.10"
   },
@@ -40,6 +53,7 @@
     "dropzone": "^6.0.0-beta.2",
     "electron-settings": "^4.0.4",
     "electron-squirrel-startup": "^1.0.1",
+    "electron-updater": "^6.6.2",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "update-electron-app": "^3.1.1"
