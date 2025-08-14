@@ -116,6 +116,9 @@ document.getElementById("createFile").addEventListener('click', async function()
                     undefinedCount = 0;
                 }
                 await parseBM(filePairings[i].file, fileFormats.get('B&M').skuCol, fileFormats.get('B&M').priceCol);//use the fileformat map from UI driver to get any possible override of the default file formats
+                for (let item of BM_map.keys()) {
+                    console.log(`%c ${item} + " " + ${JSON.stringify(BM_map.get(item))}`, "color: green; font-weight: bold;");
+                }
                 await writeFile(masterFile, commandMode, BM_map)
                 break;
             case "Reggio":
@@ -166,38 +169,58 @@ async function parseBM(file, skuCol, priceCol){
                 SKU = SKU.toString();
             }
             let lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code 
-            let code = SKU.slice(lastIndex);
-            let prefix = SKU.slice(0,lastIndex);
-            let price = null
-            if(typeof(row.values[priceCol]) == 'object'){
-                price = row.values[priceCol].result
-            } else{
-                price = row.values[priceCol]
-            }
-            
-            SKU = replaceCode(prefix, code);
-            SKU = "BM-".concat(SKU);
-                
-            price = checkOverrides(SKU, price); // check for overrides
-                
-            //required to get the proper postfix (ie. C3NL <- PB)
-            let goodCode = SKU.slice(SKU.lastIndexOf("-")+1);
-            let goodPrefix = "BM-".concat(prefix);
-            if(goodPrefix.endsWith("W")){
-                goodPrefix = goodPrefix.slice(0, -2); // remove the W from the end of the prefix
-                goodPrefix = goodPrefix + "W"; // add the W back to the end of the prefix
 
+            if(lastIndex <= 2){ // if the last index is the one after the BM- then it does not have a postfix and can just be added
+                //console.log("++ Adding SKU without postfix: " + SKU);
+                if(!BM_map.has(SKU)){ // if the SKU does not exist then create the first entry
+                    let price = null
+                    if(typeof(row.values[priceCol]) == 'object'){
+                        price = row.values[priceCol].result
+                    } else{
+                        price = row.values[priceCol]
+                    }
+                    SKU = "BM-".concat(SKU); // add the BM- prefix to the SKU
+                    BM_map.set(SKU, {'info': [{'code': '', 'price': price}]});
+                }
+
+            } else{ 
+
+                let code = SKU.slice(lastIndex);
+                let prefix = SKU.slice(0,lastIndex);
+                let price = null
+                if(typeof(row.values[priceCol]) == 'object'){
+                    price = row.values[priceCol].result
+                } else{
+                    price = row.values[priceCol]
+                }
+                
+                SKU = replaceCode(prefix, code);
+                SKU = "BM-".concat(SKU);
+                    
+                price = checkOverrides(SKU, price); // check for overrides
+                    
+                //required to get the proper postfix (ie. C3NL <- PB)
+                let goodCode = SKU.slice(SKU.lastIndexOf("-")+1);
+                let goodPrefix = "BM-".concat(prefix);
+                if(goodPrefix.endsWith("W")){
+                    goodPrefix = goodPrefix.slice(0, -2); // remove the W from the end of the prefix
+                    goodPrefix = goodPrefix + "W"; // add the W back to the end of the prefix
+
+                }
+                if(BM_map.has(goodPrefix)){ // if the prefix exists then simply push a variation code to the info array
+                    BM_map.get(goodPrefix).info.push({'code': goodCode, 'price': price});
+                } else{ // if the prefix does not exist then create a new object in the Map
+                    BM_map.set(goodPrefix, {'info': [{'code': goodCode, 'price': price}]});
+                };
             }
-            if(BM_map.has(goodPrefix)){ // if the prefix exists then simply push a variation code to the info array
-                BM_map.get(goodPrefix).info.push({'code': goodCode, 'price': price});
-            } else{ // if the prefix does not exist then create a new object in the Map
-                BM_map.set(goodPrefix, {'info': [{'code': goodCode, 'price': price}]});
-            };
         });
+
     });
+
 
     return 1;
 }
+
 
 /**
  * @name replaceCode
@@ -287,6 +310,7 @@ async function handleExistingData(file){
                         if(lastIndex <= 2){
                             //console.log("++ Adding SKU without postfix: " + SKU);
                             existingData.set(SKU, "no postfix code");
+                            console.log("no postfix code for " + SKU);
                         }
                         code = SKU.slice(lastIndex);
                         prefix = SKU.slice(0,lastIndex);
@@ -398,11 +422,15 @@ async function writeFile(file, mode, map){
 
                         lastIndex = SKU.lastIndexOf("-"); //remove and convert the postfix code
 
+
                         if(lastIndex<= 2){// if the last index is the one after the BM- then it does not have a postfix and can just be added
                             if(existingData.has(SKU)){
                                 //console.log("---SKU without postfix: " + SKU + " price: " + price);
-                                price = checkOverrides(SKU, price); // check for overrides
-                                downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                                if(map.has(SKU)){ // if the SKU exists in the map then get the price from the map
+                                    price = map.get(SKU).info[0].price; // get the price from the map
+                                    price = checkOverrides(SKU, price); // check for overrides
+                                    downloadSheet.addRow({sku: SKU, price: price, command: mode, tagscommand: "MERGE", tags: arrToStr(tagsArr)}); //add the row to the worksheet
+                                }
                             }
                         }
 
