@@ -606,20 +606,27 @@ if(!hardwareSet.includes(SKU)){
         }
         else{
 
-            if(intersectionPlates.length != 1){
-                if(cutSKU.endsWith("K")){
-                    for (let item of intersectionPlates){
-                        if(item.endsWith("B")){
-                            intersectionPlates.splice(intersectionPlates.indexOf(item), 1); // remove the item from the array
-                        }
-                    }
-                }else{
-                    for (let item of intersectionPlates){
-                        if(item.endsWith("K")){
-                            intersectionPlates.splice(intersectionPlates.indexOf(item), 1); // remove the item from the array
-                        }
-                    }
+            if(intersectionPlates.length > 1){
+
+                const kPlate = intersectionPlates.find(item => item.endsWith("K"));
+                if (kPlate) {
+                    intersectionPlates = [kPlate];
                 }
+                else{
+                    if(cutSKU.endsWith("K")){
+                        for (let item of intersectionPlates){
+                            if(item.endsWith("B")){
+                                intersectionPlates.splice(intersectionPlates.indexOf(item), 1); // remove the item from the array
+                            }
+                        }
+                    }else{
+                        for (let item of intersectionPlates){
+                            if(item.endsWith("K")){
+                                intersectionPlates.splice(intersectionPlates.indexOf(item), 1); // remove the item from the array
+                            }
+                        }
+                    }
+                }   
             }
 
             // if(intersectionKnobs.length != 1 || intersectionPlates.length != 1){
