@@ -608,9 +608,11 @@ if(!hardwareSet.includes(SKU)){
 
             if(intersectionPlates.length > 1){
 
-                const kPlate = intersectionPlates.find(item => item.endsWith("K"));
+                let kPlate = intersectionPlates.find(item => item.endsWith("K"));
                 if (kPlate) {
-                    intersectionPlates = [kPlate];
+                    intersectionPlates.length = 0;
+                    intersectionPlates.push(kPlate);
+                    console.log("Chose K plate for " + SKU + " plates: " + intersectionPlates);
                 }
                 else{
                     if(cutSKU.endsWith("K")){
